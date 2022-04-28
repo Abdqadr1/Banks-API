@@ -16,6 +16,7 @@
 	<description>Spring Boot API  for Nigeria banks</description>
 	<properties>
 		<java.version>11</java.version>
+		<java.runtime.version>11</java.runtime.version>
 	</properties>
 	<dependencies>
 		<dependency>
