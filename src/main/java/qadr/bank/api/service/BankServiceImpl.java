@@ -1,6 +1,7 @@
 package qadr.bank.api.service;
 
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.userdetails.User;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -48,7 +49,7 @@ public class BankServiceImpl implements BankService {
 
     @Override
     public List<Bank> getAll() {
-        return bankRepo.findAll();
+        return bankRepo.findAll(Sort.by("fullName").ascending());
     }
 
     @Override
