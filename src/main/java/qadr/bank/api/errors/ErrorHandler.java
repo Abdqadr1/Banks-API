@@ -23,7 +23,7 @@ public class ErrorHandler {
     }
 
     @AllArgsConstructor
-    public class CustomErrorResponse{
+    public static class CustomErrorResponse{
         public String message;
         public String status;
         public LocalDateTime timestamp;

@@ -1,18 +1,11 @@
 package qadr.bank.api;
 
-import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
 import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import qadr.bank.api.controller.MyUserDetailService;
-import qadr.bank.api.model.Bank;
-import qadr.bank.api.service.BankService;
-
-import java.util.ArrayList;
 
 @SpringBootApplication
 public class ApiApplication {
@@ -28,11 +21,6 @@ public class ApiApplication {
 		return new InMemoryHttpTraceRepository();
 	}
 
-
-	@Bean
-	public MyUserDetailService getMyUserDetailService(BCryptPasswordEncoder bCryptPasswordEncoder){
-		return new MyUserDetailService(bCryptPasswordEncoder);
-	}
 //	@Bean
 //	CommandLineRunner run(BankService bankService) {
 //		return args -> {

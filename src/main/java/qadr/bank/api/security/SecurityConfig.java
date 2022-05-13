@@ -51,7 +51,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().anyRequest().permitAll();
         http.formLogin().disable();
 
-//        http.addFilter(new CustomAuthenticationFilter(authenticationManagerBean()));
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);
     }
 
@@ -62,7 +61,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
                 .password(bCryptPasswordEncoder.encode("discowale"))
                 .roles("ADMIN")
                 .build();
-        auth.inMemoryAuthentication().withUser(admin);
+        auth.inMemoryAuthentication().withUser(admin).passwordEncoder(bCryptPasswordEncoder);
     }
 
     @Override

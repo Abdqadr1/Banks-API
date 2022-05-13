@@ -1,19 +1,12 @@
 package qadr.bank.api.controller;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.RequiredArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.userdetails.User;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 import qadr.bank.api.errors.CustomException;
 import qadr.bank.api.model.Bank;
@@ -30,7 +23,6 @@ import java.util.Map;
 public class BankController {
     private final BankService bankService;
     private final AuthenticationManager authenticationManager;
-    private final MyUserDetailService userDetailService;
 
     @PostMapping("/add")
     public Bank addBank(@RequestBody Bank bank){
@@ -69,16 +61,15 @@ public class BankController {
 
         try{
             UsernamePasswordAuthenticationToken authenticationToken = new UsernamePasswordAuthenticationToken(username, password);
-            authenticationManager.authenticate(authenticationToken);
+            Authentication auth = authenticationManager.authenticate(authenticationToken);
+            User user = (User) auth.getPrincipal();
+            Map<String, String> tokens = new HashMap<>();
+            tokens.put("access_token", JWTUtil.createAccessToken(user, "/bank/api/login"));
+            tokens.put("refresh_token", JWTUtil.createRefreshToken(user));
+            return new ResponseEntity<>(tokens, HttpStatus.OK);
         } catch (Exception e) {
             throw new CustomException("Incorrect username or password", HttpStatus.BAD_REQUEST);
         }
-
-        User user = (User) userDetailService.loadUserByUsername(username);
-        Map<String, String> tokens = new HashMap<>();
-        tokens.put("access_token", JWTUtil.createAccessToken(user, "/bank/api/login"));
-        tokens.put("refresh_token", JWTUtil.createRefreshToken(user));
-        return new ResponseEntity<>(tokens, HttpStatus.OK);
     }
 
 }
