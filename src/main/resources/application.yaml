@@ -12,10 +12,9 @@ management:
       base-path: /manage
 spring:
   datasource:
-    url: jdbc:mysql://eu-cdbr-west-02.cleardb.net:3306/heroku_678028072bd1b46?reconnect=true&sslMode=DISABLED&autoReconnect=true
-#    url: jdbc:mysql://localhost:3306/banks_api
-    username: bdec6aecad4779
-    password: 5a923bc8
+    url: jdbc:mysql://localhost:3306/banks_api
+    username: root
+    password:
   jpa:
     show-sql: true
     hibernate:
