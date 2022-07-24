@@ -18,13 +18,13 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 @RestController
-@RequestMapping("/bank") @CrossOrigin("*")
+@RequestMapping("/bank")
 public class BankController {
     @Autowired private AuthenticationManager authenticationManager;
     @Autowired private BankService bankService;
 
     @PostMapping("/add")
-    public Bank addBank(@RequestBody Bank bank){
+    public Bank addBank(Bank bank){
         return bankService.addBank(bank);
     }
 
@@ -54,9 +54,9 @@ public class BankController {
         return bankService.deleteBank(id);
     }
 
-    @PutMapping("/edit/{id}")
-    public Bank editBank (@PathVariable("id") int id, @RequestBody Bank bank){
-        return bankService.updateBank(id, bank);
+    @PostMapping("/edit")
+    public Bank editBank (Bank bank){
+        return bankService.updateBank(bank);
     }
 
     @PostMapping("/authenticate")

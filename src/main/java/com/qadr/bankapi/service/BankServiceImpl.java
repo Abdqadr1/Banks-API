@@ -64,7 +64,8 @@ public class BankServiceImpl implements BankService {
     }
 
     @Override
-    public Bank updateBank(int id, Bank newBank) {
+    public Bank updateBank(Bank newBank) {
+        Integer id = newBank.getId();
         Bank bank = bankRepo.findById(id).orElseThrow(
                 () -> new CustomException("Bank not found", HttpStatus.NOT_FOUND)
         );

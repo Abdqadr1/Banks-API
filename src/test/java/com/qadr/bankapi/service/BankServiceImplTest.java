@@ -140,7 +140,7 @@ class BankServiceImplTest {
         Bank nBank = new Bank(id,"United Bank of Nigeria", "UBA",
                 "Commercial", "3759845984");
         //when and then
-        assertThatThrownBy(() -> bankService.updateBank(id, any()))
+        assertThatThrownBy(() -> bankService.updateBank(any()))
                 .isInstanceOf(CustomException.class)
                 .hasMessageContaining("Bank not found");
 
@@ -149,7 +149,7 @@ class BankServiceImplTest {
         bank.setId(2);
         given(bankRepo.findBySortCode(any())).willReturn(Optional.of(bank));
         //when and then
-        assertThatThrownBy(() -> bankService.updateBank(id, bank))
+        assertThatThrownBy(() -> bankService.updateBank(bank))
                 .isInstanceOf(CustomException.class)
                 .hasMessageContaining("already exists");
 
@@ -157,7 +157,7 @@ class BankServiceImplTest {
         // given no errors
         given(bankRepo.findById(any())).willReturn(Optional.of(nBank));
         given(bankRepo.findBySortCode(any())).willReturn(Optional.of(nBank));
-        Bank newBank = bankService.updateBank(id, nBank);
+        Bank newBank = bankService.updateBank(nBank);
         assertThat(newBank).isEqualTo(nBank);
     }
 }

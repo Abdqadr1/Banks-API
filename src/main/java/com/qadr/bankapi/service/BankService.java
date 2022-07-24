@@ -12,6 +12,6 @@ public interface BankService {
     List<Bank> getBanks(String type);
     List<Bank> getAll();
     Bank deleteBank(int id);
-    Bank updateBank(int id, Bank bank);
+    Bank updateBank(Bank bank);
     Map<String, Object> getBankPage(int pageNumber);
 }
