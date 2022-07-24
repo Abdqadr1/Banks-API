@@ -1,0 +1,43 @@
+.status{
+    height:120px;
+    color: white;
+    font-weight: 700;
+    margin: 10px 8px;
+    box-sizing: border-box;
+    padding: 15px 16px;
+}
+.number{
+    font-size: 1.5em;
+}
+.name{
+    display: flex;
+    margin-bottom: 10px;
+}
+.name span{
+    font-size: 1em;
+    align-self: flex-end;
+}
+.name span.material-icons-outlined,  
+.name span.material-icons{
+    font-size: 2em;
+    align-self: flex-end;
+    margin-right: 5px;
+}
+.updated{
+    font-weight: 400;
+    margin-top: 5px;
+    font-size: 15px;
+    padding: 0;
+    text-align: center;
+}
+
+@media screen and (max-width: 720px) {
+    .status {
+        height: 140px;
+    }
+    .name span.material-icons-outlined,
+    .name span.material-icons {
+        font-size: 1.5em;
+        align-self: center
+    }
+}
