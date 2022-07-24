@@ -5,6 +5,7 @@ import com.qadr.bankapi.model.Bank;
 import com.qadr.bankapi.security.JWTUtil;
 import com.qadr.bankapi.service.BankService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -16,17 +17,20 @@ import org.springframework.web.bind.annotation.*;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-
-
-@RestController @RequiredArgsConstructor
+@RestController
 @RequestMapping("/bank") @CrossOrigin("*")
 public class BankController {
-    private final BankService bankService;
-    private final AuthenticationManager authenticationManager;
+    @Autowired private AuthenticationManager authenticationManager;
+    @Autowired private BankService bankService;
 
     @PostMapping("/add")
     public Bank addBank(@RequestBody Bank bank){
         return bankService.addBank(bank);
+    }
+
+    @GetMapping("/page/{number}")
+    public Map<String, Object> getBankPage(@PathVariable("number") Integer pageNumber){
+        return bankService.getBankPage(pageNumber);
     }
 
     @GetMapping("/")
