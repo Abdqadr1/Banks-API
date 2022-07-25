@@ -7,7 +7,7 @@ import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { listFormData, SPINNERS_BORDER_HTML} from '../utilities';
 
-const EditModal = ({ hideModal, edit, editBank, token }) => {
+const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
     const [form, setForm] = useState({});
     const url = process.env.REACT_APP_SERVER_URL + "/edit";
     const navigate = useNavigate();
@@ -24,8 +24,10 @@ const EditModal = ({ hideModal, edit, editBank, token }) => {
     }, [alert]);
 
     useEffect(() => {
-        if (edit?.bank) setForm({...edit.bank})
-        
+        if (edit?.bank && edit.bank?.country) {
+            setForm({ ...edit.bank, country: edit.bank.country.id });
+        }
+        setAlert(s => ({ ...s, show: false }))
         abortControllerRef.current = new AbortController();
         return () => abortControllerRef.current.abort();
     }, [edit.bank]);
@@ -80,21 +82,40 @@ const EditModal = ({ hideModal, edit, editBank, token }) => {
                     </Alert>
                     <Form onSubmit={handleSubmit}>
                         <input type="hidden" name="id" value={form?.id} />
-                        <Form.Group className="mb-3" controlId="fullName">
+                        <Form.Group className="mb-3" controlId="name">
                             <Form.Label>Bank name</Form.Label>
-                            <Form.Control value={form?.fullName ?? ""} name="fullName"  onChange={handleChange} type="text" placeholder="Enter full name" required minLength="3" />
+                            <Form.Control value={form?.name ?? ""} name="name"  onChange={handleChange} type="text" placeholder="Enter full name" required minLength="3" />
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="shortName">
-                            <Form.Label>Short name</Form.Label>
-                            <Form.Control value={form?.shortName ?? ""} name="shortName"  onChange={handleChange} type="text" placeholder="Enter short name" required minLength="3" />
+                        <Form.Group className="mb-3" controlId="alias">
+                            <Form.Label>Alias</Form.Label>
+                            <Form.Control value={form?.alias ?? ""} name="alias"  onChange={handleChange} type="text" placeholder="Enter short name" required minLength="3" />
+                        </Form.Group><Form.Group className="mb-3" controlId="type">
+                            <Form.Label>Type</Form.Label>
+                            <Form.Select value={form?.type ?? ""}  onChange={handleChange} name="type" required>
+                                <option value="" hidden>Select bank type</option>
+                                <option value="nuban">nuban</option>
+                            </Form.Select>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="type">
-                            <Form.Label>Bank type</Form.Label>
-                            <Form.Control value={form?.type ?? ""} name="type"  onChange={handleChange} type="text" placeholder="Enter type" required minLength="3" />
+                        <Form.Group className="mb-3" controlId="country">
+                            <Form.Label>Country</Form.Label>
+                            <Form.Select value={form?.country ?? ""}  onChange={handleChange} name="country" required>
+                                <option value="" hidden>Select bank country</option>
+                                {
+                                    countries.map(c => <option key={c.id} value={c.id}>{c.name}</option>)
+                                }
+                            </Form.Select>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="sortCode">
-                            <Form.Label>Sort code</Form.Label>
-                            <Form.Control value={form?.sortCode ?? ""} name="sortCode" onChange={handleChange} type="number" placeholder="Enter sort code" required minLength="3" />
+                        <Form.Group className="mb-3" controlId="currency">
+                            <Form.Label>Currency</Form.Label>
+                            <Form.Control value={form?.currency ?? ""}  onChange={handleChange} name="currency" type="text" placeholder="Enter currency" required minLength="3"/>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="code">
+                            <Form.Label>Code</Form.Label>
+                            <Form.Control value={form?.code ?? ""}  onChange={handleChange} name="code" type="number" placeholder="Enter code" required minLength="3"/>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="longCode">
+                            <Form.Label>Long Code</Form.Label>
+                            <Form.Control value={form?.longCode ?? ""}  onChange={handleChange} name="longCode" type="number" placeholder="Enter long code" required minLength="3"/>
                         </Form.Group>
                         <Button variant="primary" type="submit">
                             Save Changes

@@ -1,17 +1,100 @@
 package com.qadr.bankapi.service;
 
+import com.qadr.bankapi.errors.CustomException;
 import com.qadr.bankapi.model.Bank;
+import lombok.RequiredArgsConstructor;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Sort;
+import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+import com.qadr.bankapi.repo.BankRepo;
 
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
-public interface BankService {
-    Bank addBank(Bank bank);
-    Bank getBank(int id);
-    Bank getBank (String name);
-    List<Bank> getBanks(String type);
-    List<Bank> getAll();
-    Bank deleteBank(int id);
-    Bank updateBank(Bank bank);
-    Map<String, Object> getBankPage(int pageNumber);
+@Service @Transactional
+public class BankService {
+    public static final int BANKS_PER_PAGE = 3;
+    @Autowired private BankRepo bankRepo;
+
+    private void validateBank(Bank bank){
+        Optional<Bank> bankOptional = bankRepo.findByCode(bank.getCode());
+        if (bankOptional.isPresent() && !bankOptional.get().getId().equals(bank.getId())) {
+            throw new CustomException("Sort code already exists!", HttpStatus.BAD_REQUEST);
+        }
+        bankOptional = bankRepo.findByCode(bank.getAlias());
+        if (bankOptional.isPresent() && !bankOptional.get().getId().equals(bank.getId())) {
+            throw new CustomException("Alias already exists!", HttpStatus.BAD_REQUEST);
+        }
+    }
+
+    public Bank addBank(Bank bank) {
+        validateBank(bank);
+        bank.setCreatedTime(new Date());
+        bank.setEnabled(true);
+        return bankRepo.save(bank);
+    }
+
+
+    public Bank updateBank(Bank newBank) {
+        Integer id = newBank.getId();
+        Bank bankInDb = getBankById(id);
+        validateBank(newBank);
+        newBank.setCreatedTime(bankInDb.getCreatedTime());
+        newBank.setUpdatedTime(new Date());
+        newBank.setEnabled(bankInDb.isEnabled());
+        return bankRepo.save(newBank);
+    }
+
+
+    public Bank getBankById(int id) {
+        Optional<Bank> bankOptional =  bankRepo.findById(id);
+        if (bankOptional.isEmpty()) throw new CustomException("Bank not found", HttpStatus.NOT_FOUND);
+        return bankOptional.get();
+    }
+
+    public Bank getBankByAlias(String name) {
+        return bankRepo.findByAlias(name).orElseThrow(
+                ()-> new CustomException("Bank not found", HttpStatus.NOT_FOUND));
+    }
+    public List<Bank> getBanksByType(String type) {
+        return bankRepo.findByType(type);
+    }
+
+    public List<Bank> getAllBanks() {
+        return bankRepo.findAll(Sort.by("fullName").ascending());
+    }
+
+    public Bank deleteBankById(int id) {
+        Bank bank = bankRepo.findById(id)
+                .orElseThrow(
+                        ()-> new CustomException("Bank not found", HttpStatus.NOT_FOUND)
+                );
+        bankRepo.deleteById(id);
+        return bank;
+    }
+
+
+    public Map<String, Object> getBankPage(int pageNumber) {
+        Sort sort = Sort.by("name").ascending();
+        PageRequest pageRequest = PageRequest.of(pageNumber - 1, BANKS_PER_PAGE, sort);
+        Page<Bank> page = bankRepo.findAll(pageRequest);
+        int startCount = (pageNumber-1) * BANKS_PER_PAGE + 1;
+        int endCount = BANKS_PER_PAGE * pageNumber;
+        endCount = (endCount > page.getTotalElements()) ? (int) page.getTotalElements() : endCount;
+        HashMap<String, Object> map = new HashMap<>();
+        map.put("currentPage", pageNumber);
+        map.put("startCount", startCount);
+        map.put("endCount", endCount);
+        map.put("totalPages", page.getTotalPages());
+        map.put("totalElements", page.getTotalElements());
+        map.put("banks", page.getContent());
+        map.put("numberPerPage", BANKS_PER_PAGE);
+        return map;
+    }
+
+
+
 }

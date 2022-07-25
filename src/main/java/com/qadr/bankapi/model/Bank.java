@@ -1,35 +1,58 @@
 package com.qadr.bankapi.model;
 
-import lombok.AllArgsConstructor;
-import lombok.Data;
-import lombok.NoArgsConstructor;
-import lombok.RequiredArgsConstructor;
+import lombok.*;
+import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import java.util.Date;
+import java.util.Objects;
 
-@Entity @Data @NoArgsConstructor
+@Entity
+@Getter
+@Setter
+@ToString
+@RequiredArgsConstructor
 @AllArgsConstructor @Table(name = "banks")
 public class Bank {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
-    @Column(name = "full_name")
-    private String fullName;
-    @Column(name = "short_name")
-    private String shortName;
+    @Column(nullable = false)
+    private String name;
 
-    @Column(name = "category")
-    private String type;
+    @Column(nullable = false, unique = true)
+    private String alias;
 
-    @Column(name = "sort_code", unique = true)
-    private String sortCode;
+    @Enumerated(EnumType.STRING)
+    private BankType type;
 
-    public Bank(String fullName, String shortName, String type, String sortCode){
-        this.fullName = fullName;
-        this.shortName = shortName;
-        this.type = type;
-        this.sortCode = sortCode;
+    @Column(name = "code", unique = true)
+    private String code;
+
+    private String longCode;
+
+    private Date createdTime;
+    private Date updatedTime;
+
+    private boolean enabled;
+
+    @ManyToOne
+    @JoinColumn(name = "country_id")
+    private Country country;
+
+    private String currency;
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
+        Bank bank = (Bank) o;
+        return id != null && Objects.equals(id, bank.id);
     }
 
+    @Override
+    public int hashCode() {
+        return getClass().hashCode();
+    }
 }

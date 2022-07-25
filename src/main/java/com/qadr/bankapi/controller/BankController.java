@@ -4,7 +4,6 @@ import com.qadr.bankapi.errors.CustomException;
 import com.qadr.bankapi.model.Bank;
 import com.qadr.bankapi.security.JWTUtil;
 import com.qadr.bankapi.service.BankService;
-import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -35,23 +34,28 @@ public class BankController {
 
     @GetMapping("/")
     public List<Bank> getAll(){
-        return bankService.getAll();
+        return bankService.getAllBanks();
     }
 
     @GetMapping("/name/{name}")
-    public Bank getBank(@PathVariable("name") String name){
-        return bankService.getBank(name);
+    public Bank getBankByAlias(@PathVariable("name") String name){
+        return bankService.getBankByAlias(name);
+    }
+
+    @GetMapping("/id/{id}")
+    public Bank getBankById(@PathVariable("id") Integer id){
+        return bankService.getBankById(id);
     }
 
 
     @GetMapping("/type/{type}")
     public List<Bank> getBanksByType(@PathVariable("type") String type){
-        return bankService.getBanks(type);
+        return bankService.getBanksByType(type);
     }
 
     @DeleteMapping("/delete/{id}")
     public Bank deleteBank(@PathVariable("id") int id){
-        return bankService.deleteBank(id);
+        return bankService.deleteBankById(id);
     }
 
     @PostMapping("/edit")

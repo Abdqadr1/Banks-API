@@ -4,12 +4,24 @@ class Bank extends React.Component{
 
     render() {
         let props = this.props;
+        const updateStatus = props.updateStatus;
+        const enabled = props.enabled
+            ? <span 
+                onClick={()=> updateStatus(props.id, false)} 
+                className="material-icons text-success fs-3">
+                    check_circle
+                </span>
+            : <span
+                onClick={()=> updateStatus(props.id, true)} 
+                className="material-icons text-secondary fs-3">circle</span>
         return (
              <tr>
-                <td>{props.fullName }</td>
-                <td>{props.shortName }</td>
+                <td>{props.name }</td>
+                <td>{props.alias }</td>
                 <td>{props.type }</td>
-                <td>{props.sortCode }</td>
+                <td>{props.code }</td>
+                <td>{props.longCode }</td>
+                <td>{enabled}</td>
                 <td>
                     <Row className='justify-content-center'>
                         <Col className="d-flex justify-content-center">

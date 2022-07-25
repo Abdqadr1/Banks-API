@@ -17,6 +17,7 @@ class Banks extends React.Component {
         super(props);
         this.state = {
             banks: [],
+            countries: [],
             edit: {show: false,bank: {}},
             delete: {bool: false,id: 0 },
             add: false,
@@ -112,23 +113,42 @@ class Banks extends React.Component {
         this.fetchBanks(number);
     }
 
+    fetchCountries() {
+        if (this.state.countries.length < 1) {
+            const countryUrl = process.env.REACT_APP_URL + "country/all";
+            this.setState(s => ({ loading: true }));
+            axios.get(countryUrl,{signal: this.abortController.signal})
+                .then(res => {
+                    const data = res.data;
+                    this.setState({ countries: data });
+            })
+            .catch(error => {
+                if (error?.response?.status === 406) this.setState(() => ({ user: { } } ))
+            })
+            .finally(() => {
+                this.setState(s => ({loading: false}))
+            })
+        }
+    }
+
     fetchBanks(pageNumber) {
         this.setState(s => ({ loading: true }));
         const url = `${this.serverURl}/page/${pageNumber}`;
          axios.get(url,{signal: this.abortController.signal})
              .then(res => {
                 const data = res.data;
-                this.setState(s =>({
-                    banks: data.banks,
-                    pageInfo: {
-                        endCount: data.endCount,
-                        startCount: data.startCount,
-                        totalPages: data.totalPages,
-                        totalElements: data.totalElements,
-                        numberPerPage: data.numberPerPage,
-                        number: data.currentPage
-                    }
-                }))
+                 this.setState(s => ({
+                     banks: data.banks,
+                     pageInfo: {
+                         endCount: data.endCount,
+                         startCount: data.startCount,
+                         totalPages: data.totalPages,
+                         totalElements: data.totalElements,
+                         numberPerPage: data.numberPerPage,
+                         number: data.currentPage
+                     }
+                 }));
+                 this.fetchCountries();
             })
             .catch(error => {
                 if (error?.response?.status === 406) this.setState(() => ({ user: { } } ))
@@ -156,10 +176,12 @@ class Banks extends React.Component {
                                 <Table striped bordered hover size="sm">
                                     <thead className="bg-light text-dark">
                                         <tr>
-                                            <th>Full Name</th>
-                                            <th>Short Name</th>
+                                            <th>Name</th>
+                                            <th>Alias</th>
                                             <th>Type</th>
-                                            <th>Sort Code</th>
+                                            <th>Code</th>
+                                            <th>Long Code</th>
+                                            <th>Enabled</th>
                                             <th>Actions</th>
                                         </tr>
                                     </thead>
@@ -170,8 +192,8 @@ class Banks extends React.Component {
                                     </tbody>
                                 </Table>
                                 <MyPagination pageInfo={this.state.pageInfo} go={this.gotoPage} />
-                                <AddModal show={this.state.add} hideModal={this.hideModal} addBank={this.add} token={this.state.user?.access_token} />
-                                <EditModal edit={this.state.edit} hideModal={this.hideModal} editBank={this.edit} token={this.state.user?.access_token} />
+                                <AddModal countries={this.state.countries} show={this.state.add} hideModal={this.hideModal} addBank={this.add} token={this.state.user?.access_token} />
+                                <EditModal countries={this.state.countries} edit={this.state.edit} hideModal={this.hideModal} editBank={this.edit} token={this.state.user?.access_token} />
                                 <DeleteModal delete={this.state.delete} hideModal={this.hideModal} />
                             </Container>
                         </React.Fragment>

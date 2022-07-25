@@ -10,6 +10,6 @@ import java.util.Optional;
 @Repository
 public interface BankRepo extends JpaRepository<Bank, Integer> {
     List<Bank> findByType(String type);
-    Optional<Bank> findByShortName(String name);
-    Optional<Bank> findBySortCode(String code);
+    Optional<Bank> findByAlias(String name);
+    Optional<Bank> findByCode(String code);
 }
