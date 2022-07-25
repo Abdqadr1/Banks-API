@@ -48,6 +48,11 @@ public class BankService {
         return bankRepo.save(newBank);
     }
 
+    public void updateEnabled(Integer id, boolean enabled){
+        getBankById(id);
+        bankRepo.updateEnabled(id, enabled);
+    }
+
 
     public Bank getBankById(int id) {
         Optional<Bank> bankOptional =  bankRepo.findById(id);

@@ -1,24 +1,27 @@
 import Modal from 'react-bootstrap/Modal';
 import Button from 'react-bootstrap/Button';
 import { useRef } from 'react';
-const DeleteModal = ({show, message, hideModal, id, deleteBank}) => {
+import { SPINNERS_BORDER_HTML } from './utilities';
+const DeleteModal = ({obj, deleteBank, hideModal}) => {
     const buttonRef = useRef(null);
-    const msgRef = useRef(null);
     const handleDelete = (id) => {
-        deleteBank(id)
+        const text = buttonRef?.current?.textContent;
+        buttonRef.current.innerHTML = SPINNERS_BORDER_HTML;
+        const callback = () => {
+            buttonRef.current.textContent = text;
+        }
+        deleteBank(id, callback);
     }
     return ( 
         <>
-            <Modal show={show} onHide={() => hideModal('delete')}>
+            <Modal show={obj.show} onHide={() => hideModal('delete')}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Confirmation</Modal.Title>
+                    <Modal.Title>Delete (ID : {obj.id})</Modal.Title>
                 </Modal.Header>
-                <Modal.Body>
-                    <p ref={msgRef}>{message ?? "Are you sure you want to delete this item?"}</p>
-                </Modal.Body>
+                <Modal.Body>{"Are you sure you want to delete this item?"}</Modal.Body>
                 <Modal.Footer>
                     <Button variant="secondary"  onClick={() => hideModal('delete')}>Cancel</Button>
-                    <Button variant="danger" ref={buttonRef}  onClick={() => handleDelete(id)}>Delete</Button>
+                    <Button variant="danger" ref={buttonRef}  onClick={() => handleDelete(obj.id)}>Delete</Button>
                 </Modal.Footer>
             </Modal>
         </>

@@ -4,6 +4,7 @@ import com.qadr.bankapi.errors.CustomException;
 import com.qadr.bankapi.model.Bank;
 import com.qadr.bankapi.security.JWTUtil;
 import com.qadr.bankapi.service.BankService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,13 @@ public class BankController {
     public Bank addBank(Bank bank){
         return bankService.addBank(bank);
     }
+
+    @GetMapping("/enabled/{id}/{enabled}")
+    public void updateEnabled(@PathVariable("id") Integer id,
+                              @PathVariable("enabled") boolean enabled){
+        bankService.updateEnabled(id,enabled);
+    }
+
 
     @GetMapping("/page/{number}")
     public Map<String, Object> getBankPage(@PathVariable("number") Integer pageNumber){

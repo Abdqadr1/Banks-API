@@ -74,14 +74,14 @@ const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
         <>
             <Modal show={edit.show} onHide={()=>hideModal('edit')}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit Bank (ID : {edit.bank.id})</Modal.Title>
+                    <Modal.Title>Edit Bank (ID : {edit?.bank?.id})</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Alert ref={alertRef} tabIndex={-1} variant={alert.variant} show={alert.show} dismissible onClose={toggleAlert}>
                         {alert.message}
                     </Alert>
                     <Form onSubmit={handleSubmit}>
-                        <input type="hidden" name="id" value={form?.id} />
+                        <input type="hidden" name="id" value={form?.id ?? ""} />
                         <Form.Group className="mb-3" controlId="name">
                             <Form.Label>Bank name</Form.Label>
                             <Form.Control value={form?.name ?? ""} name="name"  onChange={handleChange} type="text" placeholder="Enter full name" required minLength="3" />

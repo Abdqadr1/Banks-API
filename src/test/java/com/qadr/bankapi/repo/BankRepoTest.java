@@ -42,6 +42,15 @@ class BankRepoTest {
         System.out.println(save);
     }
 
+    @Test
+    void testUpdateEnabled(){
+        int id = 2;
+        bankRepo.updateEnabled(id, true);
+        Optional<Bank> bank = bankRepo.findById(id);
+        assertThat(bank).isPresent();
+        assertThat(bank.get().isEnabled()).isEqualTo(true);
+    }
+
 
 
 

@@ -7,10 +7,11 @@ import AddBank from './addBank'
 import NavBar from '../navbar';
 import MyPagination from '../traces/pagination';
 import { Navigate } from 'react-router-dom';
-import { SPINNERS_BORDER, SPINNERS_BORDER_HTML } from '../utilities';
+import { SPINNERS_BORDER, useThrottle } from '../utilities';
 import EditModal from './edit_bank';
 import AddModal from './add_bank';
-import DeleteModal  from '../delete_modal';
+import DeleteModal from '../delete_modal';
+import MessageModal from "../message_modal"
 
 class Banks extends React.Component {
     constructor(props) {
@@ -19,17 +20,23 @@ class Banks extends React.Component {
             banks: [],
             countries: [],
             edit: {show: false,bank: {}},
-            delete: {bool: false,id: 0 },
+            delete: {show: false,id: 0 },
             add: false,
             pageInfo: {
                 number: 1, totalPages: 1, startCount: 1,
                 endCount: null, totalElements: null, numberPerPage: 1
             },
             user: JSON.parse(localStorage.getItem('user')),
-            loading: true
+            loading: true,
+            messageModal: { show: false, title: "", message: "" },
+            width: window.innerWidth
         };
         this.serverURl = process.env.REACT_APP_SERVER_URL;
         this.abortController = new AbortController();
+        this.updateEnabled = this.updateEnabled.bind(this);
+        this.fetchBanks = this.fetchBanks.bind(this);
+        this.delete = this.delete.bind(this);
+        this.handleWindowWidthChange = this.handleWindowWidthChange.bind(this);
     }
 
     showModal = (which, id) => {
@@ -42,7 +49,7 @@ class Banks extends React.Component {
         }
         if (which === "delete") {
             this.setState( state => ({
-                    delete: {bool:true, id}
+                    delete: {show:true, id}
                 })
             )
         }
@@ -56,45 +63,49 @@ class Banks extends React.Component {
     hideModal = (which) => {
         if (which === "edit") {
             this.setState(s => ({...s, edit : {...s.edit, show:false}}))
-        } else if (which === "delete") {
-            this.setState(s => ({...s, edit : {...s.delete, show:false}}))
-        } else if (which === "add") {
-            this.setState(state => (
-                { add: false }
-            ))
+        }
+        if (which === "delete") {
+            this.setState(s => ({...s, delete : {...s.delete, show:false}}))
+        }
+        if (which === "add") {
+            this.setState(state => ( { add: false }  ))
+        }
+        if (which === "message") {
+            this.setState(s => ({messageModal:{...s.messageModal, show:false}}))
         }
     }
-    delete = (id, button) =>  {
-        button.innerHTML = SPINNERS_BORDER_HTML;
-        button.disabled = true;
+    delete = (id, cb) =>  {
         axios.delete(`${this.serverURl}/delete/${id}`, {
             headers: {
-                "Authorization" : "Bearer " + this.state.user?.access_token
+                "Authorization": "Bearer " + this.state.user?.access_token
             },
             signal: this.abortController.signal
         })
-            .then(() => { 
+            .then(() => {
                 this.setState(state => ({
-                    banks: state.banks.filter(bank => bank.id !== id),
-                    delete: {bool:false, id: 0}
+                    banks: state.banks.filter(bank => bank.id !== id)
+                }));
+                this.setState(s => ({
+                    messageModal: {
+                        ...s.messageModal, show: true,
+                        title: "Delete Bank", message: "Bank deleted"
+                    }
                 }))
-                button.innerHTML = "Delete";
-                button.disabled = false;
             })
             .catch(error => {
                 if (error.response) {
                     if (error.response.status === 406) this.setState(() => ({ user: {} }))
-                    else {
-                        this.setState(state => ({
-                            delete: {...state.delete, message: error.response.data.error
-                            }
-                        }))
-                    }
-                    
+                    this.setState(s => ({
+                        messageModal: {
+                            ...s.messageModal, show: true,
+                            title: "Delete Bank", message: "Could not delete bank"
+                        }
+                    }))
                 }
-                button.innerHTML = "Delete";
-                button.disabled = false;
-            })
+            }).finally(() => {
+                this.setState({ delete: { show: false, id: -1 }})
+                cb();
+            });
     }
     edit = (bank) => {
         const banks = this.state.banks;
@@ -106,11 +117,11 @@ class Banks extends React.Component {
        this.setState(s => ({...s, banks: [...s.banks, bank]}))
     }
 
+    handleWindowWidthChange = useThrottle(() => this.setState({width: window.innerWidth}), 500)
+
     componentDidMount() {
+        window.addEventListener("resize", this.handleWindowWidthChange);
         this.fetchBanks(1);
-    }
-    gotoPage = (number) => {
-        this.fetchBanks(number);
     }
 
     fetchCountries() {
@@ -157,8 +168,44 @@ class Banks extends React.Component {
                 this.setState(s => ({loading: false}))
             })
     }
+
+    updateEnabled(id, status) {
+        this.setState({ loading: true });
+        const url = `${this.serverURl}/enabled/${id}/${status}`;
+        axios.get(url,{
+            headers: {
+                "Authorization" : "Bearer " + this.state.user?.access_token
+            },
+            signal: this.abortController.signal
+        })
+            .then(() => {
+                const banks = this.state.banks;
+                const index = banks.findIndex(b => b.id === id);
+                banks[index].enabled = status;
+                this.setState(s => ({ ...s, banks: [...s.banks] }))
+                const message = "Bank " + (status ? 'enabled' : 'disabled');
+                this.setState(s => ({messageModal:{...s.messageModal, show:true, title:"Enable Bank", message}}))
+            })
+            .catch(error => {
+                if (error?.response?.status === 406) this.setState(() => ({ user: {} }));
+                this.setState(s => ({messageModal:{...s.messageModal, show:true, title:"Enable Bank", message: "An error occurred"}}))
+            })
+            .finally(() => {
+                this.setState(s => ({loading: false}))
+            })
+    }
     componentWillUnmount() {
         this.abortController.abort();
+        window.removeEventListener("resize", this.handleWindowWidthChange)
+    }
+
+    listBanks(banks, type) {
+        return (banks.length > 0)
+            ? banks.map(bank => <Bank key={bank.id} viewType={type} {...bank} showModal={this.showModal}
+                            updateStatus={this.updateEnabled} />)
+            : ((type === 'detailed')
+                ? <tr><td colSpan={7} className="text-center">No Bank found</td></tr>
+                : <div className="text-center my-3 fw-bold">No rate found</div>)
     }
 
     render() {
@@ -173,28 +220,35 @@ class Banks extends React.Component {
                             <NavBar />
                             <AddBank showModal={this.showModal} />
                             <Container>
-                                <Table striped bordered hover size="sm">
-                                    <thead className="bg-light text-dark">
-                                        <tr>
-                                            <th>Name</th>
-                                            <th>Alias</th>
-                                            <th>Type</th>
-                                            <th>Code</th>
-                                            <th>Long Code</th>
-                                            <th>Enabled</th>
-                                            <th>Actions</th>
-                                        </tr>
-                                    </thead>
-                                    <tbody className='border-top-0'>
-                                        {(this.state.banks.length < 1)
-                                            ? <tr><td colSpan={5} className="text-center">No Bank found</td></tr>
-                                            : this.state.banks.map(bank => <Bank key={bank.id} {...bank} showModal={this.showModal} />)}
-                                    </tbody>
-                                </Table>
-                                <MyPagination pageInfo={this.state.pageInfo} go={this.gotoPage} />
-                                <AddModal countries={this.state.countries} show={this.state.add} hideModal={this.hideModal} addBank={this.add} token={this.state.user?.access_token} />
-                                <EditModal countries={this.state.countries} edit={this.state.edit} hideModal={this.hideModal} editBank={this.edit} token={this.state.user?.access_token} />
-                                <DeleteModal delete={this.state.delete} hideModal={this.hideModal} />
+                                {
+                                    (this.state.width >= 769)
+                                    ? 
+                                        <Table striped bordered hover size="sm">
+                                            <thead className="bg-light text-dark">
+                                                <tr>
+                                                    <th>Name</th>
+                                                    <th>Alias</th>
+                                                    <th className="d-md-none d-lg-block">Type</th>
+                                                    <th>Code</th>
+                                                    <th className="d-md-none d-lg-block">Long Code</th>
+                                                    <th>Enabled</th>
+                                                    <th>Actions</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody className='border-top-0'>
+                                                {this.listBanks(this.state.banks, 'detailed')}
+                                            </tbody>
+                                        </Table>
+                                    
+                                    : this.listBanks(this.state.banks, 'less')
+                                }
+                                <MyPagination pageInfo={this.state.pageInfo} go={this.fetchBanks} />
+                                <AddModal countries={this.state.countries} show={this.state.add} hideModal={this.hideModal}
+                                    addBank={this.add} token={this.state.user?.access_token} />
+                                <EditModal countries={this.state.countries} edit={this.state.edit} hideModal={this.hideModal}
+                                    editBank={this.edit} token={this.state.user?.access_token} />
+                                <DeleteModal obj={this.state.delete} hideModal={this.hideModal} deleteBank={this.delete} />
+                                <MessageModal obj={this.state.messageModal} hideModal={this.hideModal} />
                             </Container>
                         </React.Fragment>
                 }
