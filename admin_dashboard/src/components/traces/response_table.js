@@ -38,7 +38,7 @@ class ResponseTable extends React.Component{
                     <Col xs={5} md={3}>{this.props.export}</Col>
                 </Row>
                  <Table striped bordered responsive hover size="sm" ref={this.tableRef}>
-                    <thead>
+                    <thead className="bg-light text-secondary">
                         <tr>
                         <th>Timestamp</th>
                         <th>Method</th>

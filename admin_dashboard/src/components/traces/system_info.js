@@ -3,11 +3,17 @@ import React, { memo } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { SystemStatus } from '../../context/context';
 import { formatBytes, formatUpTime } from '../../utilities';
+import { SPINNERS_BORDER_HTML } from '../utilities';
 
 class SystemInfo extends React.Component{
     refresh = (event) => {
-        event.target.disabled = true
-        this.props.refresh(() => event.target.disabled = false)
+        event.target.disabled = true;
+        const text = event.target.textContent;
+        event.target.innerHTML = SPINNERS_BORDER_HTML;
+        this.props.refresh(() => {
+            event.target.disabled = false;
+            event.target.textContent = text;
+        })
         
     }
 
