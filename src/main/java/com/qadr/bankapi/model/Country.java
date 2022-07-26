@@ -13,13 +13,17 @@ import java.util.Objects;
 @Table(name = "countries")
 public class Country {
     @Id
-    @GeneratedValue
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Integer id;
 
+    @Column(unique = true)
     private String name;
 
     @Column(unique = true)
     private String code;
+
+    @Column(unique = true)
+    private String callCode;
 
     private String continent;
 

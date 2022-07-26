@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Button, Card } from "react-bootstrap";
+import { Row, Col, Button } from "react-bootstrap";
 class Country extends React.Component{
 
     constructor(props) {
@@ -21,11 +21,9 @@ class Country extends React.Component{
         return (
              <tr>
                 <td>{prop.name }</td>
-                <td>{prop.alias }</td>
-                <td className="d-md-none d-lg-table-cell">{prop.type }</td>
-                <td>{prop.code }</td>
-                <td className="d-md-none d-lg-table-cell">{prop.longCode }</td>
-                <td>{this.enabled}</td>
+                <td className="d-none d-md-table-cell">{prop.code }</td>
+                <td className="d-none d-md-table-cell">{prop.callCode }</td>
+                <td className="d-none d-md-table-cell">{prop.continent }</td>
                 <td>
                     <Row className='justify-content-center'>
                         <Col className="d-flex justify-content-center">
@@ -42,32 +40,8 @@ class Country extends React.Component{
         );
     }
 
-    rowItem(prop) {
-        return (
-            <Card className="text-start my-2">
-                <Card.Header className="px-3 d-flex justify-content-between align-items-center">
-                  <span className="fw-bold">Country ID #{prop.id}</span>
-                    <div className="justify-content-start d-flex">
-                        <div className="me-2">{this.enabled}</div>
-                        <Button className="me-2 p-1 action" variant="outline-primary" title="edit" onClick={() => prop.showModal('edit', prop.id)}>
-                            <span className="material-icons pb-0">edit</span>
-                        </Button>
-                        <Button className="me-2 p-1 action" variant="outline-danger" title="delete" onClick={() => prop.showModal('delete', prop.id)}>
-                            <span className="material-icons pb-0">delete</span>
-                        </Button>
-                    </div>
-                </Card.Header>
-                <Card.Body className="p-2">
-                    <div className="mb-1"><strong>Name: </strong>{prop.name}</div>
-                    <div className="mb-1"><strong>Type: </strong>{prop.type}</div>
-                    <div><strong>Code: </strong>{prop.code}</div>
-                </Card.Body>
-            </Card>
-        )
-    }
-
     render() {
-        return (this.props.viewType === 'detailed') ? this.tableItem(this.props) : this.rowItem(this.props);
+        return this.tableItem(this.props);
     }
 }
 

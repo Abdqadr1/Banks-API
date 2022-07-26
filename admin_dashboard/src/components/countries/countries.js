@@ -6,7 +6,7 @@ import Container from 'react-bootstrap/Container';
 import NavBar from '../navbar';
 import MyPagination from '../traces/pagination';
 import { Navigate } from 'react-router-dom';
-import { SPINNERS_BORDER, useThrottle } from '../utilities';
+import { SPINNERS_BORDER } from '../utilities';
 import AddEditModal from './add_update';
 import DeleteModal from '../delete_modal';
 import MessageModal from "../message_modal"
@@ -16,9 +16,8 @@ class Countries extends React.Component {
         super(props);
         this.state = {
             countries: [],
-            edit: {show: false,country: {}},
+            add_edit: {show: false,country: {}},
             delete: {show: false,id: 0 },
-            add: false,
             pageInfo: {
                 number: 1, totalPages: 1, startCount: 1,
                 endCount: null, totalElements: null, numberPerPage: 1
@@ -32,16 +31,13 @@ class Countries extends React.Component {
         this.abortController = new AbortController();
         this.fetchCountries = this.fetchCountries.bind(this);
         this.delete = this.delete.bind(this);
-        this.handleWindowWidthChange = this.handleWindowWidthChange.bind(this);
     }
 
     showModal = (which, id) => {
-        if (which === "edit") {
-            const country = this.state.countries.find(b => b.id === id);
-            this.setState( state => ({
-                    edit: {show:true, country}
-                })
-            )
+        if (which === "edit" || which === "add") {
+            let country = {};
+            if(id) country = this.state.countries.find(b => b.id === id);
+            this.setState({ add_edit: {show:true, country, which} })
         }
         if (which === "delete") {
             this.setState( state => ({
@@ -49,22 +45,13 @@ class Countries extends React.Component {
                 })
             )
         }
-        if (which === "add") {
-            this.setState( state => ({
-                    add: true
-                })
-            )
-        }
     }
     hideModal = (which) => {
-        if (which === "edit") {
-            this.setState(s => ({...s, edit : {...s.edit, show:false}}))
+        if (which === "edit" || which === "add") {
+            this.setState(s => ({...s, add_edit : {...s.add_edit, show:false}}))
         }
         if (which === "delete") {
             this.setState(s => ({...s, delete : {...s.delete, show:false}}))
-        }
-        if (which === "add") {
-            this.setState(state => ( { add: false }  ))
         }
         if (which === "message") {
             this.setState(s => ({messageModal:{...s.messageModal, show:false}}))
@@ -103,17 +90,16 @@ class Countries extends React.Component {
                 cb();
             });
     }
-    edit = (country) => {
-        const countries = this.state.countries;
-        const index = countries.findIndex(b => b.id === country.id);
-        countries[index] = country;
-        this.setState(s => ({...s, countries: [...s.countries]}))
+    addEdit = (country, type) => {
+        if (type === "edit") {
+            const countries = this.state.countries;
+            const index = countries.findIndex(b => b.id === country.id);
+            countries[index] = country;
+            this.setState(s => ({ ...s, countries: [...s.countries] }));
+            return;
+        }
+        this.setState(s => ({...s, countries: [...s.countries, country]}))
     }
-    add = (country) => {
-       this.setState(s => ({...s, countries: [...s.countries, country]}))
-    }
-
-    handleWindowWidthChange = useThrottle(() => this.setState({width: window.innerWidth}), 500)
 
     componentDidMount() {
         window.addEventListener("resize", this.handleWindowWidthChange);
@@ -152,15 +138,10 @@ class Countries extends React.Component {
     }
     componentWillUnmount() {
         this.abortController.abort();
-        window.removeEventListener("resize", this.handleWindowWidthChange)
     }
 
     listCountries(countries, type) {
-        return (countries.length > 0)
-            ? countries.map(country => <Country key={country.id} viewType={type} {...country} showModal={this.showModal} />)
-            : ((type === 'detailed')
-                ? <tr><td colSpan={7} className="text-center">No Country found</td></tr>
-                : <div className="text-center my-3 fw-bold">No Country found</div>)
+        return 
     }
 
     render() {
@@ -180,33 +161,29 @@ class Countries extends React.Component {
                                             note_add
                                         </span>
                                     </div>
-                                    {
-                                        (this.state.width >= 769)
-                                        ? 
-                                            <Table striped bordered hover size="sm">
-                                                <thead className="bg-light text-dark">
-                                                    <tr>
-                                                        <th>Name</th>
-                                                        <th>Alias</th>
-                                                        <th className="d-md-none d-lg-block">Type</th>
-                                                        <th>Code</th>
-                                                        <th className="d-md-none d-lg-block">Long Code</th>
-                                                        <th>Enabled</th>
-                                                        <th>Actions</th>
-                                                    </tr>
-                                                </thead>
-                                                <tbody className='border-top-0'>
-                                                    {this.listCountries(this.state.countries, 'detailed')}
-                                                </tbody>
-                                            </Table>
-                                        
-                                        : this.listCountries(this.state.countries, 'less')
-                                    }
+                                    <Table striped bordered hover size="sm">
+                                        <thead className="bg-light text-dark">
+                                            <tr>
+                                                <th>Name</th>
+                                                <th className="d-none d-md-table-cell">Country Code</th>
+                                                <th className="d-none d-md-table-cell">Call Code</th>
+                                                <th className="d-none d-md-table-cell">Continent</th>
+                                                <th>Actions</th>
+                                            </tr>
+                                        </thead>
+                                        <tbody className='border-top-0'>
+                                            {
+                                                (this.state.countries.length > 0)
+                                                    ? this.state.countries.map(country => <Country key={country.id} {...country} showModal={this.showModal} />)
+                                                    : <tr><td colSpan={4} className="text-center">No Country found</td></tr>
+                                            }
+                                        </tbody>
+                                    </Table>
                                 </>
                                 <MyPagination pageInfo={this.state.pageInfo} go={this.fetchCountries} />
-                                <AddEditModal edit={this.state.edit} hideModal={this.hideModal}
-                                    editCountry={this.edit} token={this.state.user?.access_token} />
-                                <DeleteModal obj={this.state.delete} hideModal={this.hideModal} deleteCountry={this.delete} />
+                                <AddEditModal add_edit={this.state.add_edit} hideModal={this.hideModal}
+                                    addEditCountry={this.addEdit} token={this.state.user?.access_token} />
+                                <DeleteModal obj={this.state.delete} hideModal={this.hideModal} deleteBank={this.delete} />
                                 <MessageModal obj={this.state.messageModal} hideModal={this.hideModal} />
                             </Container>
                         </React.Fragment>

@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { listFormData, SPINNERS_BORDER_HTML} from '../utilities';
 
-const AddEditModal = ({ hideModal, edit, editCountry, token }) => {
+const AddEditModal = ({ hideModal, add_edit, addEditCountry, token }) => {
     const [form, setForm] = useState({});
-    const url = process.env.REACT_APP_COUNTRY_URL + "/edit";
+    const url = process.env.REACT_APP_COUNTRY_URL + "/save";
     const navigate = useNavigate();
     const abortControllerRef = useRef();
     const alertRef = useRef();
@@ -24,13 +24,13 @@ const AddEditModal = ({ hideModal, edit, editCountry, token }) => {
     }, [alert]);
 
     useEffect(() => {
-        if (edit?.country && edit.country?.country) {
-            setForm({ ...edit.country, country: edit.country.country.id });
-        }
+        if (add_edit?.country?.name) {
+            setForm({ ...add_edit.country });
+        } else setForm({});
         setAlert(s => ({ ...s, show: false }))
         abortControllerRef.current = new AbortController();
         return () => abortControllerRef.current.abort();
-    }, [edit.country]);
+    }, [add_edit.country]);
 
     const handleChange = (event) => {
         setForm(s => ({
@@ -55,7 +55,7 @@ const AddEditModal = ({ hideModal, edit, editCountry, token }) => {
             signal: abortControllerRef.current.signal
         })
             .then(res => {
-                editCountry(res.data);
+                addEditCountry(res.data, add_edit.which);
                 setAlert(s => ({ ...s, variant: "success", show: true, message: "Country saved!" }));
             })
             .catch(error => {
@@ -72,9 +72,9 @@ const AddEditModal = ({ hideModal, edit, editCountry, token }) => {
 
     return (
         <>
-            <Modal show={edit.show} onHide={()=>hideModal('edit')}>
+            <Modal show={add_edit.show} onHide={()=>hideModal('edit')}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit Country (ID : {edit?.country?.id})</Modal.Title>
+                    <Modal.Title>Country {(add_edit?.country?.id) && <strong>ID: {add_edit?.country?.id}</strong>}</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Alert ref={alertRef} tabIndex={-1} variant={alert.variant} show={alert.show} dismissible onClose={toggleAlert}>
@@ -84,23 +84,28 @@ const AddEditModal = ({ hideModal, edit, editCountry, token }) => {
                         <input type="hidden" name="id" value={form?.id ?? ""} />
                         <Form.Group className="mb-3" controlId="name">
                             <Form.Label>Country name</Form.Label>
-                            <Form.Control value={form?.name ?? ""} name="name"  onChange={handleChange} type="text" placeholder="Enter full name" required minLength="3" />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="alias">
-                            <Form.Label>Alias</Form.Label>
-                            <Form.Control value={form?.alias ?? ""} name="alias"  onChange={handleChange} type="text" placeholder="Enter short name" required minLength="3" />
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="currency">
-                            <Form.Label>Currency</Form.Label>
-                            <Form.Control value={form?.currency ?? ""}  onChange={handleChange} name="currency" type="text" placeholder="Enter currency" required minLength="3"/>
+                            <Form.Control value={form?.name ?? ""} name="name"  onChange={handleChange} type="text" placeholder="Enter name" required minLength="3" />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="code">
-                            <Form.Label>Code</Form.Label>
-                            <Form.Control value={form?.code ?? ""}  onChange={handleChange} name="code" type="number" placeholder="Enter code" required minLength="3"/>
+                            <Form.Label>Country Code</Form.Label>
+                            <Form.Control value={form?.code ?? ""} name="code"  onChange={handleChange} type="text" placeholder="Enter code" required minLength="2" maxLength="2"/>
                         </Form.Group>
-                        <Form.Group className="mb-3" controlId="longCode">
-                            <Form.Label>Long Code</Form.Label>
-                            <Form.Control value={form?.longCode ?? ""}  onChange={handleChange} name="longCode" type="number" placeholder="Enter long code" required minLength="3"/>
+                        <Form.Group className="mb-3" controlId="continent">
+                            <Form.Label>Continent</Form.Label>
+                            <Form.Select value={form?.continent ?? ""} onChange={handleChange} name="continent" required>
+                                <option value="" hidden>Select continent</option>
+                                <option value="AFRICA">AFRICA</option>
+                                <option value="ANTARCTICA">ANTARCTICA</option>
+                                <option value="ASIA">ASIA</option>
+                                <option value="AUSTRALIA">AUSTRALIA</option>
+                                <option value="EUROPE">EUROPE</option>
+                                <option value="NORTH AMERICA">NORTH AMERICA</option>
+                                <option value="SOUTH AMERICA">SOUTH AMERICA</option>
+                            </Form.Select>
+                        </Form.Group>
+                        <Form.Group className="mb-3" controlId="callCode">
+                            <Form.Label>Call Code</Form.Label>
+                            <Form.Control value={form?.callCode ?? ""} onChange={handleChange} name="callCode" placeholder="Enter callCode" maxLength="5" />
                         </Form.Group>
                         <Button variant="primary" type="submit">
                             Save Changes
