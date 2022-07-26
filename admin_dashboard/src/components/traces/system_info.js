@@ -27,7 +27,7 @@ class SystemInfo extends React.Component{
                     const time = formatUpTime(systemInfo.upTime)
                     return (
                         <Container fluid className='bg-light'>
-                            <Row className='justify-content-between py-2'>
+                            <Row className='justify-content-between align-items-center py-2'>
                                 <Col xs={6} md={10} className='system-col pb-2'>
                                     <span className={sClass}>
                                         <span className="material-icons">dns</span>
@@ -51,7 +51,7 @@ class SystemInfo extends React.Component{
                                     </span>
                                 </Col>
                                 <Col xs={6} md={2} className='d-flex justify-content-end'>
-                                    <Button variant='success' className='refresh-btn' onClick={this.refresh}>Refresh Data</Button>
+                                    <Button variant='success' className="" onClick={this.refresh}>Refresh Data</Button>
                                 </Col>
                             </Row>
                         </Container>

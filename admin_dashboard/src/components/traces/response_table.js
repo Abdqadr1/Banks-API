@@ -29,7 +29,7 @@ class ResponseTable extends React.Component{
     render() {
         const index = this.state.selectedIndex;
         const trace = index > -1 ? this.context[index] : ""
-        const traces = (this.context.length < 1) ? <tr><td colSpan={6}>No Response yet</td></tr> : 
+        const traces = (this.context.length < 1) ? <tr><td colSpan={6} className="text-center">No Response yet</td></tr> : 
             this.context.map((trace, i) => <Response key={i} trace={trace} index={i} showModal={this.showModal} /> )
         return (
             <Container id='response_root'>
@@ -40,12 +40,12 @@ class ResponseTable extends React.Component{
                  <Table striped bordered responsive hover size="sm" ref={this.tableRef}>
                     <thead className="bg-light text-secondary">
                         <tr>
-                        <th>Timestamp</th>
-                        <th>Method</th>
-                        <th>Time taken(ms)</th>
-                        <th>Status</th>
+                        <th className="d-none d-lg-table-cell">Timestamp</th>
+                        <th className="d-none d-md-table-cell">Method</th>
+                        <th className="d-none d-lg-table-cell">Time taken(ms)</th>
+                        <th className="d-none d-lg-table-cell">Status</th>
                         <th>URI</th>
-                        <th>view</th>
+                        <th>Action</th>
                         </tr>
                     </thead>
                     <tbody className='border-top-0'>

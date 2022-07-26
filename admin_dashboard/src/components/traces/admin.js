@@ -88,8 +88,9 @@ class Admin extends React.Component{
         .then(response => { if (response) data = response.data
         })
         .catch(error => {
-            if (error.response.status === 503) data = error.response.data
-            if (error.response.status === 406) this.setState(() => ({ user: { } } ))
+            const response = error?.response;
+            if (response?.status === 503) data = response.data;
+            if (response?.status === 406) this.setState(() => ({ user: { } } ))
         }) 
         .finally(() => {
             if (data) {
@@ -179,7 +180,7 @@ class Admin extends React.Component{
                 }))
             })
             .catch(error => {
-                if (error.response.status === 406) this.setState(() => ({ user: { } } ))
+                if (error?.response?.status === 406) this.setState(() => ({ user: { } } ))
             })
     }
     fetchSystemUptime() {
@@ -200,7 +201,7 @@ class Admin extends React.Component{
             this.upTime()
         })
             .catch(error => {
-                if (error.response.status === 406) this.setState(() => ({ user: { } } ))
+                if (error?.response?.status === 406) this.setState(() => ({ user: { } } ))
             })
     }
     init() {
@@ -210,7 +211,7 @@ class Admin extends React.Component{
             this.fetchCPUCount(),
             this.fetchSystemUptime(),
             this.fetchTraces()])
-            .finally(() => this.setState({loading: false}));
+        .finally(() => {this.setState({loading: false})});
     }
     gotoPage = (number) => {
         this.setState(s => {

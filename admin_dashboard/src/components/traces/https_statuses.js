@@ -12,49 +12,51 @@ class Statuses extends React.Component{
         const figures = this.props.figures;
         return (
             <Container>
-                <Row className="justify-content-around">
-                    <Col className="bg-success status rounded">
-                        <Row className="justify-content-between">
-                            <Col xs={9} className="name pe-0">
-                                <span className="material-icons-outlined">check_circle</span>
-                                <span>200 Response</span>
-                            </Col>
-                            <Col xs={3} className="number">{figures._200.count}</Col>
-                        </Row>
-                        <div className="updated">Updated: <span className="ps-2">{figures._200.time}</span></div>
+                <Row className="justify-content-around mx-0">
+                    <Col xs={11} md={6} lg={3} className="status">
+                        <div className="inner bg-success rounded">
+                            <div className="justify-content-between d-flex flex-wrap align-items-center">
+                                <span className="material-icons-outlined mt-1">check_circle</span>
+                                <span className="mt-1">200 Response</span>
+                                <span className="number mt-1">{figures._200.count}</span>
+                            </div>
+                            <div className="updated">Updated: <span>{figures._200.time}</span></div>
+                        </div>
+                        
                     </Col>
                     
-                    <Col className="bg-primary status rounded">
-                        <Row className="justify-content-between">
-                            <Col xs={9} className="name pe-0">
+                    <Col xs={11} md={6} lg={3} className="status">
+                        <div className="inner bg-primary rounded">
+                            <div className="justify-content-between d-flex flex-wrap align-items-center">
                                 <span className="material-icons-outlined">warning_amber</span>
                                 <span>404 Response</span>
-                            </Col>
-                            <Col xs={3} className="number">{figures._404.count}</Col>
-                        </Row>
-                        <div className="updated">Updated: <span className="ps-2">{figures._404.time}</span></div>
+                                <span className="number mt-1">{figures._404.count}</span>
+                            </div>
+                            <div className="updated">Updated: <span>{figures._404.time}</span></div>
+                        </div>
                     </Col>
                     
-                    <Col className="bg-warning status rounded">
-                        <Row className="justify-content-between">
-                            <Col xs={9} className="name pe-0">
+                    <Col xs={11} md={6} lg={3} className=" status">
+                        <div className="inner bg-warning rounded">
+                            <div className="justify-content-between d-flex flex-wrap align-items-center">
                                 <span className="material-icons">error</span>
                                 <span>400 Response</span>
-                            </Col>
-                            <Col xs={3} className="number">{figures._400.count}</Col>
-                        </Row>
-                        <div className="updated">Updated: <span className="ps-2">{figures._400.time}</span></div>
+                                <span className="number mt-1">{figures._400.count}</span>
+                            </div>
+                            <div className="updated">Updated: <span>{figures._400.time}</span></div>
+                        </div>
                     </Col>
                     
-                    <Col className="bg-danger status rounded">
-                        <Row className="justify-content-between">
-                            <Col xs={9} className="name pe-0">
+                    <Col xs={11} md={6} lg={3} className="status">
+                        <div className="inner bg-danger rounded">
+                            <div className="justify-content-between d-flex flex-wrap align-items-center">
                                 <span className="material-icons-outlined">bug_report</span>
                                 <span>500 Response</span>
-                            </Col>
-                            <Col xs={3} className="number">{figures._500.count}</Col>
-                        </Row>
-                        <div className="updated">Updated: <span className="ps-2">{figures._500.time}</span></div>
+                                <span className="number mt-1">{figures._500.count}</span>
+                            </div>
+                            <div className="updated">Updated: <span>{figures._500.time}</span></div>
+                        </div>
+                        
                     </Col>
                 </Row>
             </Container>

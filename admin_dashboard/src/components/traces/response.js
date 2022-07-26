@@ -23,10 +23,10 @@ const Response = (props) => {
 
     return ( 
         <tr>
-            <td>{trace.timestamp}</td>
-            <td>{trace.request.method}</td>
-            <td>{trace.timeTaken}</td>
-            <td><span className={className}>{trace.response.status}</span></td>
+            <td className="d-none d-lg-table-cell">{trace.timestamp}</td>
+            <td className="d-none d-md-table-cell">{trace.request.method}</td>
+            <td className="d-none d-lg-table-cell">{trace.timeTaken}</td>
+            <td className="d-none d-lg-table-cell"><span className={className}>{trace.response.status}</span></td>
             <td>{trace.request.uri}</td>
             <td>
                 <span className="material-icons view" onClick={() => props.showModal(props.index)}>visibility</span>

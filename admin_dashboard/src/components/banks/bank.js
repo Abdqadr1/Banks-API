@@ -1,5 +1,5 @@
 import React from "react";
-import { Row, Col, Button } from "react-bootstrap";
+import { Row, Col, Button, Card } from "react-bootstrap";
 class Bank extends React.Component{
 
     constructor(props) {
@@ -43,14 +43,10 @@ class Bank extends React.Component{
     }
 
     rowItem(prop) {
-          return (
-            <Row className="my-2 justify-content-between">
-                <Col xs="5" className="text-center fw-bold">
-                    <div>{prop.code}</div>
-                </Col>
-                <Col xs="7">
-                    <div className="d-block mb-3">{prop.name}</div>
-                    <div className="d-block mb-3">{prop.tye}</div>
+        return (
+            <Card className="text-start my-2">
+                <Card.Header className="px-3 d-flex justify-content-between align-items-center">
+                  <span className="fw-bold">Bank ID #{prop.id}</span>
                     <div className="justify-content-start d-flex">
                         <div className="me-2">{this.enabled}</div>
                         <Button className="me-2 p-1 action" variant="outline-primary" title="edit" onClick={() => prop.showModal('edit', prop.id)}>
@@ -60,8 +56,13 @@ class Bank extends React.Component{
                             <span className="material-icons pb-0">delete</span>
                         </Button>
                     </div>
-                </Col>
-            </Row>
+                </Card.Header>
+                <Card.Body className="p-3">
+                    <div className="d-block mb-2">{prop.name}</div>
+                    <div className="d-block mb-2">{prop.type}</div>
+                    <div>{prop.code}</div>
+                </Card.Body>
+            </Card>
         )
     }
 
