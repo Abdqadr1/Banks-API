@@ -27,7 +27,7 @@ public class CustomAuthorizationFilter extends OncePerRequestFilter {
     @Override
     protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response,
                                     FilterChain filterChain) throws ServletException, IOException {
-            log.error("Server path {} ", request.getServletPath());
+//            log.error("Server path {} ", request.getServletPath());
             String authHeader = request.getHeader(AUTHORIZATION);
             if (authHeader != null && authHeader.startsWith("Bearer ")){
                 try {

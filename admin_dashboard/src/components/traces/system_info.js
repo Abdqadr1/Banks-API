@@ -2,8 +2,7 @@
 import React, { memo } from 'react';
 import { Button, Col, Container, Row } from 'react-bootstrap';
 import { SystemStatus } from '../../context/context';
-import { formatBytes, formatUpTime } from '../../utilities';
-import { SPINNERS_BORDER_HTML } from '../utilities';
+import { SPINNERS_BORDER_HTML, formatBytes, formatUpTime } from '../utilities';
 
 class SystemInfo extends React.Component{
     refresh = (event) => {

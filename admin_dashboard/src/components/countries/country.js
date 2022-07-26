@@ -1,6 +1,6 @@
 import React from "react";
 import { Row, Col, Button, Card } from "react-bootstrap";
-class Bank extends React.Component{
+class Country extends React.Component{
 
     constructor(props) {
         super(props);
@@ -46,7 +46,7 @@ class Bank extends React.Component{
         return (
             <Card className="text-start my-2">
                 <Card.Header className="px-3 d-flex justify-content-between align-items-center">
-                  <span className="fw-bold">Bank ID #{prop.id}</span>
+                  <span className="fw-bold">Country ID #{prop.id}</span>
                     <div className="justify-content-start d-flex">
                         <div className="me-2">{this.enabled}</div>
                         <Button className="me-2 p-1 action" variant="outline-primary" title="edit" onClick={() => prop.showModal('edit', prop.id)}>
@@ -71,4 +71,4 @@ class Bank extends React.Component{
     }
 }
 
-export default Bank;
+export default Country;

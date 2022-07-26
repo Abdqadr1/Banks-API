@@ -8,7 +8,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router';
 
 const AddModal = ({ hideModal, show, addBank, token, countries }) => {
-    const url = process.env.REACT_APP_SERVER_URL + "/add";
+    const url = process.env.REACT_APP_BANK_URL + "/add";
     const navigate = useNavigate();
     const abortControllerRef = useRef();
     const alertRef = useRef();

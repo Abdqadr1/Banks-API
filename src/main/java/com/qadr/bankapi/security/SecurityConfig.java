@@ -41,10 +41,12 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         });
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests().antMatchers("/bank/add/**", "/bank/edit/**",
-                "/bank/delete/**","/bank/enabled/**", "/manage/**").hasRole("ADMIN");
+        http.authorizeRequests().antMatchers(
+                "/bank/all/**", "/bank/name/**",
+                "/bank/id/**","/bank/type/**", "/bank/authenticate/**",
+                "/country/all/**", "/country/continent/**").permitAll();
 
-        http.authorizeRequests().anyRequest().permitAll();
+        http.authorizeRequests().anyRequest().hasRole("ADMIN");
         http.formLogin().disable();
 
         http.addFilterBefore(new CustomAuthorizationFilter(), UsernamePasswordAuthenticationFilter.class);

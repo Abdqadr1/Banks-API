@@ -7,9 +7,9 @@ import { useNavigate } from 'react-router';
 import axios from 'axios';
 import { listFormData, SPINNERS_BORDER_HTML} from '../utilities';
 
-const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
+const AddEditModal = ({ hideModal, edit, editCountry, token }) => {
     const [form, setForm] = useState({});
-    const url = process.env.REACT_APP_BANK_URL + "/edit";
+    const url = process.env.REACT_APP_COUNTRY_URL + "/edit";
     const navigate = useNavigate();
     const abortControllerRef = useRef();
     const alertRef = useRef();
@@ -24,13 +24,13 @@ const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
     }, [alert]);
 
     useEffect(() => {
-        if (edit?.bank && edit.bank?.country) {
-            setForm({ ...edit.bank, country: edit.bank.country.id });
+        if (edit?.country && edit.country?.country) {
+            setForm({ ...edit.country, country: edit.country.country.id });
         }
         setAlert(s => ({ ...s, show: false }))
         abortControllerRef.current = new AbortController();
         return () => abortControllerRef.current.abort();
-    }, [edit.bank]);
+    }, [edit.country]);
 
     const handleChange = (event) => {
         setForm(s => ({
@@ -55,8 +55,8 @@ const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
             signal: abortControllerRef.current.signal
         })
             .then(res => {
-                editBank(res.data);
-                setAlert(s => ({ ...s, variant: "success", show: true, message: "Bank saved!" }));
+                editCountry(res.data);
+                setAlert(s => ({ ...s, variant: "success", show: true, message: "Country saved!" }));
             })
             .catch(error => {
                 const response = error?.response;
@@ -74,7 +74,7 @@ const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
         <>
             <Modal show={edit.show} onHide={()=>hideModal('edit')}>
                 <Modal.Header closeButton>
-                    <Modal.Title>Edit Bank (ID : {edit?.bank?.id})</Modal.Title>
+                    <Modal.Title>Edit Country (ID : {edit?.country?.id})</Modal.Title>
                 </Modal.Header>
                 <Modal.Body>
                     <Alert ref={alertRef} tabIndex={-1} variant={alert.variant} show={alert.show} dismissible onClose={toggleAlert}>
@@ -83,27 +83,12 @@ const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
                     <Form onSubmit={handleSubmit}>
                         <input type="hidden" name="id" value={form?.id ?? ""} />
                         <Form.Group className="mb-3" controlId="name">
-                            <Form.Label>Bank name</Form.Label>
+                            <Form.Label>Country name</Form.Label>
                             <Form.Control value={form?.name ?? ""} name="name"  onChange={handleChange} type="text" placeholder="Enter full name" required minLength="3" />
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="alias">
                             <Form.Label>Alias</Form.Label>
                             <Form.Control value={form?.alias ?? ""} name="alias"  onChange={handleChange} type="text" placeholder="Enter short name" required minLength="3" />
-                        </Form.Group><Form.Group className="mb-3" controlId="type">
-                            <Form.Label>Type</Form.Label>
-                            <Form.Select value={form?.type ?? ""}  onChange={handleChange} name="type" required>
-                                <option value="" hidden>Select bank type</option>
-                                <option value="nuban">nuban</option>
-                            </Form.Select>
-                        </Form.Group>
-                        <Form.Group className="mb-3" controlId="country">
-                            <Form.Label>Country</Form.Label>
-                            <Form.Select value={form?.country ?? ""}  onChange={handleChange} name="country" required>
-                                <option value="" hidden>Select bank country</option>
-                                {
-                                    countries.map(c => <option key={c.id} value={c.id}>{c.name}</option>)
-                                }
-                            </Form.Select>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="currency">
                             <Form.Label>Currency</Form.Label>
@@ -127,4 +112,4 @@ const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
      );
 }
 
-export default EditModal;
+export default AddEditModal;

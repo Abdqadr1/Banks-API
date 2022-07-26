@@ -18,4 +18,5 @@ public interface BankRepo extends JpaRepository<Bank, Integer> {
     @Modifying
     @Query("UPDATE Bank b SET b.enabled=?2 WHERE b.id=?1")
     void updateEnabled(Integer id, boolean enabled);
+
 }

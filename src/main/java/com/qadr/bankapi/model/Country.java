@@ -21,6 +21,7 @@ public class Country {
     @Column(unique = true)
     private String code;
 
+    private String continent;
 
     public Country (Integer id){
         this.id = id;

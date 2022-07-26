@@ -31,7 +31,7 @@ class Banks extends React.Component {
             messageModal: { show: false, title: "", message: "" },
             width: window.innerWidth
         };
-        this.serverURl = process.env.REACT_APP_SERVER_URL;
+        this.serverURl = process.env.REACT_APP_BANK_URL;
         this.abortController = new AbortController();
         this.updateEnabled = this.updateEnabled.bind(this);
         this.fetchBanks = this.fetchBanks.bind(this);
@@ -131,6 +131,7 @@ class Banks extends React.Component {
             axios.get(countryUrl,{signal: this.abortController.signal})
                 .then(res => {
                     const data = res.data;
+                    sessionStorage.setItem("countries", data);
                     this.setState({ countries: data });
             })
             .catch(error => {
@@ -145,7 +146,12 @@ class Banks extends React.Component {
     fetchBanks(pageNumber) {
         this.setState(s => ({ loading: true }));
         const url = `${this.serverURl}/page/${pageNumber}`;
-         axios.get(url,{signal: this.abortController.signal})
+         axios.get(url,{
+            headers: {
+                "Authorization": "Bearer " + this.state.user?.access_token
+             },
+             signal: this.abortController.signal
+         })
              .then(res => {
                 const data = res.data;
                  this.setState(s => ({
@@ -205,7 +211,7 @@ class Banks extends React.Component {
                             updateStatus={this.updateEnabled} />)
             : ((type === 'detailed')
                 ? <tr><td colSpan={7} className="text-center">No Bank found</td></tr>
-                : <div className="text-center my-3 fw-bold">No rate found</div>)
+                : <div className="text-center my-3 fw-bold">No Bank found</div>)
     }
 
     render() {

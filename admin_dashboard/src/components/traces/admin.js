@@ -6,8 +6,7 @@ import SystemInfo from './system_info'
 import axios from 'axios';
 import { HttpTraces, SystemStatus } from "../../context/context";
 import MyPagination from "./pagination";
-import { timeFormat } from '../../utilities';
-import { SPINNERS_BORDER } from "../utilities";
+import { SPINNERS_BORDER , timeFormat} from "../utilities";
 import { Navigate } from 'react-router-dom';
 import { CSVLink } from 'react-csv'
 import NavBar from '../navbar';
@@ -227,7 +226,7 @@ class Admin extends React.Component{
         })})
     }
     refresh = (f) => {
-        clearInterval(this.timer)
+        clearInterval(this.timer);
         this.init()
         f()
     }
@@ -246,6 +245,7 @@ class Admin extends React.Component{
     }
     componentWillUnmount() {
         this.abortController.abort();
+        clearInterval(this.timer);
     }
     render() {
         if(!this.state.user?.access_token) return (<Navigate to={'/login'} />) 

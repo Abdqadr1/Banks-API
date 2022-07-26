@@ -40,7 +40,7 @@ public class BankController {
         return bankService.getBankPage(pageNumber);
     }
 
-    @GetMapping("/")
+    @GetMapping("/all")
     public List<Bank> getAll(){
         return bankService.getAllBanks();
     }

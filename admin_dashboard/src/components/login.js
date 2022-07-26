@@ -13,7 +13,7 @@ import { listFormData, SPINNERS_BORDER_HTML } from "./utilities";
 const Login = () => {
     const abortControllerRef = useRef();
     const { id } = useParams();
-    const url = process.env.REACT_APP_SERVER_URL;
+    const url = process.env.REACT_APP_BANK_URL + "/authenticate";
     const [alert, setAlert] = useState({ show: false, message: "", variant: "danger" });
     const alertRef = useRef();
     const toggleAlert = () => {
@@ -31,7 +31,7 @@ const Login = () => {
         const text = button.textContent;
         button.innerHTML = SPINNERS_BORDER_HTML;
         // on error
-        axios.post(`${url}/authenticate`, data, {
+        axios.post(url, data, {
             signal: abortControllerRef.current.signal
         })
             .then(response => {
