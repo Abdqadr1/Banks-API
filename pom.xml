@@ -19,7 +19,7 @@
 		<java.version>17</java.version>
 		<frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
 		<node.version>v17.4.0</node.version>
-		<npm.version>8.15.0</npm.version>
+		<npm.version>8.15.1</npm.version>
 	</properties>
 
 	<dependencies>
@@ -175,8 +175,8 @@
                 <groupId>org.apache.maven.plugins</groupId>
                 <artifactId>maven-compiler-plugin</artifactId>
 				<configuration>
-					<source>17</source>
-					<target>17</target>
+					<source>16</source>
+					<target>16</target>
 					<compilerArgs>--enable-preview</compilerArgs>
 				</configuration>
             </plugin>
