@@ -81,4 +81,23 @@ public record CountryService(CountryRepo countryRepo) {
         getById(id);
         countryRepo.deleteById(id);
     }
+
+    public Country findByCode(String code) {
+        return countryRepo.findByCode(code)
+                .orElseThrow(()->new CustomException("Could not find country with code "+code,
+                        HttpStatus.BAD_REQUEST));
+    }
+
+    public Country findByName(String name) {
+        return countryRepo.findByName(name)
+                .orElseThrow(()->new CustomException("Could not find country with name "+name,
+                        HttpStatus.BAD_REQUEST));
+
+    }
+
+    public Country findByCallCode(String code) {
+        return countryRepo.findByCallCode(code)
+                .orElseThrow(()->new CustomException("Could not find country with call code "+code,
+                        HttpStatus.BAD_REQUEST));
+    }
 }

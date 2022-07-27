@@ -46,9 +46,9 @@ public class BankController {
         return bankService.getAllBanks();
     }
 
-    @GetMapping("/name/{name}")
-    public Bank getBankByAlias(@PathVariable("name") String name){
-        return bankService.getBankByAlias(name);
+    @GetMapping("/alias/{alias}")
+    public Bank getBankByAlias(@PathVariable("alias") String alias){
+        return bankService.getBankByAlias(alias);
     }
 
     @GetMapping("/id/{id}")

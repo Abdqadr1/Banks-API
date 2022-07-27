@@ -42,9 +42,10 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
         http.authorizeRequests().antMatchers(
-                "/bank/all/**", "/bank/name/**",
+                "/bank/all/**", "/bank/alias/**",
                 "/bank/id/**","/bank/type/**", "/bank/authenticate/**",
-                "/country/all/**", "/country/continent/**").permitAll();
+                "/country/all/**", "/country/continent/**","/country/name/**",
+                "/country/code/**", "/country/call_code/**").permitAll();
 
         http.authorizeRequests().anyRequest().hasRole("ADMIN");
         http.formLogin().disable();

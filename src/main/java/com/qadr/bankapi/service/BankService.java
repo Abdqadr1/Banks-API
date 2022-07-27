@@ -37,7 +37,6 @@ public class BankService {
         return bankRepo.save(bank);
     }
 
-
     public Bank updateBank(Bank newBank) {
         Integer id = newBank.getId();
         Bank bankInDb = getBankById(id);
@@ -60,9 +59,9 @@ public class BankService {
         return bankOptional.get();
     }
 
-    public Bank getBankByAlias(String name) {
-        return bankRepo.findByAlias(name).orElseThrow(
-                ()-> new CustomException("Bank not found", HttpStatus.NOT_FOUND));
+    public Bank getBankByAlias(String alias) {
+        return bankRepo.findByAlias(alias).orElseThrow(
+                ()-> new CustomException("Could not find bank with alias "+alias, HttpStatus.NOT_FOUND));
     }
     public List<Bank> getBanksByType(String type) {
         return bankRepo.findByType(type);
