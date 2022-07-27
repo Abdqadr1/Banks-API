@@ -22,7 +22,7 @@ class Country extends React.Component{
              <tr>
                 <td>{prop.name }</td>
                 <td className="d-none d-md-table-cell">{prop.code }</td>
-                <td className="d-none d-md-table-cell">{prop.callCode }</td>
+                <td>{prop.callCode }</td>
                 <td className="d-none d-md-table-cell">{prop.continent }</td>
                 <td>
                     <Row className='justify-content-center'>

@@ -17,7 +17,7 @@ const MyPagination = ({ pageInfo, go }) => {
     }
 
     return ( 
-        <Pagination className="justify-content-center mx-0">    
+        <Pagination className="flex-wrap mt-2 justify-content-center mx-0">    
             {/* <Pagination.First /> */}
             <Pagination.Prev onClick={() => go(currentPage - 1)} disabled={isPrev} />
             {items}

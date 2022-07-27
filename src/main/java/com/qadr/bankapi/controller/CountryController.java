@@ -18,16 +18,6 @@ public class CountryController {
         return countryService.findAll();
     }
 
-    @DeleteMapping("/delete/{id}")
-    public void deleteCountry(@PathVariable Integer id){
-        countryService.deleteCountry(id);
-    }
-
-    @PostMapping("/save")
-    public Country saveCountry(Country country){
-        return countryService.saveCountry(country);
-    }
-
     @GetMapping("/continent/{continent}")
     public List<Country> getCountriesByContinent(@PathVariable String continent){
         return countryService.findByContinent(continent);
@@ -48,7 +38,17 @@ public class CountryController {
         return countryService.findByName(name);
     }
 
-    @GetMapping("/page/{number}")
+    @DeleteMapping("/admin/delete/{id}")
+    public void deleteCountry(@PathVariable Integer id){
+        countryService.deleteCountry(id);
+    }
+
+    @PostMapping("/admin/save")
+    public Country saveCountry(Country country){
+        return countryService.saveCountry(country);
+    }
+
+    @GetMapping("/admin/page/{number}")
     public Map<String, Object> getCountryPage(@PathVariable("number") Integer pageNumber,
                                               @RequestParam(value = "keyword", defaultValue = "") String keyword){
         return countryService.getCountryPage(pageNumber, keyword);

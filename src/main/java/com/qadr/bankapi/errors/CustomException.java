@@ -1,8 +1,10 @@
 package com.qadr.bankapi.errors;
 
 import lombok.Data;
+import lombok.EqualsAndHashCode;
 import org.springframework.http.HttpStatus;
 
+@EqualsAndHashCode(callSuper = true)
 @Data
 public class CustomException extends RuntimeException{
     private final HttpStatus status;

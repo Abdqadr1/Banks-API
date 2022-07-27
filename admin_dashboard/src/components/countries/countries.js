@@ -195,7 +195,7 @@ class Countries extends React.Component {
                                             <tr>
                                                 <th>Name</th>
                                                 <th className="d-none d-md-table-cell">Country Code</th>
-                                                <th className="d-none d-md-table-cell">Call Code</th>
+                                                <th>Call Code</th>
                                                 <th className="d-none d-md-table-cell">Continent</th>
                                                 <th>Actions</th>
                                             </tr>
