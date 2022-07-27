@@ -19,7 +19,7 @@
 		<java.version>17</java.version>
 		<frontend-maven-plugin.version>1.12.1</frontend-maven-plugin.version>
 		<node.version>v17.4.0</node.version>
-		<npm.version>8.10.0</npm.version>
+		<npm.version>8.15.0</npm.version>
 	</properties>
 
 	<dependencies>
