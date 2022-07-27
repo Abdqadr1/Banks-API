@@ -24,10 +24,8 @@ public class Bank {
     @Column(nullable = false, unique = true)
     private String alias;
 
-    @Enumerated(EnumType.STRING)
-    private BankType type;
+    private String type;
 
-    @Column(name = "code", unique = true)
     private String code;
 
     private String longCode;

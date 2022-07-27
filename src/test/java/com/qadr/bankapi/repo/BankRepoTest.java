@@ -1,7 +1,6 @@
 package com.qadr.bankapi.repo;
 
 import com.qadr.bankapi.model.Bank;
-import com.qadr.bankapi.model.BankType;
 import com.qadr.bankapi.model.Country;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -11,6 +10,7 @@ import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.test.annotation.Rollback;
 
 import java.util.Date;
+import java.util.List;
 import java.util.Optional;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -29,7 +29,7 @@ class BankRepoTest {
         assertThat(country).isNotNull();
         System.out.println(country);
         Bank bank = new Bank();
-        bank.setType(BankType.nuban);
+        bank.setType("nuban");
         bank.setCode("4214");
         bank.setLongCode("4214873587");
         bank.setCreatedTime(new Date());
@@ -74,9 +74,9 @@ class BankRepoTest {
     @Test
     void findByCode() {
         String sortCode = "4214";
-        Optional<Bank> bank = bankRepo.findByCode(sortCode);
-        assertThat(bank).isPresent();
-        System.out.println(bank.get());
-        assertThat(bank.get().getCode()).isEqualTo(sortCode);
+        List<Bank> bank = bankRepo.findByCode(sortCode);
+        assertThat(bank.size()).isGreaterThan(0);
+        System.out.println(bank.get(0));
+        assertThat(bank.get(0).getCode()).isEqualTo(sortCode);
     }
 }

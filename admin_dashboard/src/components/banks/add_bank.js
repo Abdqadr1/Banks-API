@@ -83,7 +83,8 @@ const AddModal = ({ hideModal, show, addBank, token, countries }) => {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="type">
                             <Form.Label>Type</Form.Label>
-                            <Form.Select name="type" required>
+                            <Form.Select name="type">
+                                <option value="" hidden>Select bank type</option>
                                 <option value="nuban">nuban</option>
                             </Form.Select>
                         </Form.Group>
@@ -102,11 +103,11 @@ const AddModal = ({ hideModal, show, addBank, token, countries }) => {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="code">
                             <Form.Label>Code</Form.Label>
-                            <Form.Control name="code" type="number" placeholder="Enter code" required minLength="3"/>
+                            <Form.Control name="code" type="number" placeholder="Enter code" minLength="3"/>
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="longCode">
                             <Form.Label>Long Code</Form.Label>
-                            <Form.Control name="longCode" type="number" placeholder="Enter long code" required minLength="3"/>
+                            <Form.Control name="longCode" type="number" placeholder="Enter long code" minLength="3"/>
                         </Form.Group>
                         <Button variant="primary" type="submit">
                             Save

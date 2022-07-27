@@ -91,7 +91,7 @@ const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
                             <Form.Control value={form?.alias ?? ""} name="alias"  onChange={handleChange} type="text" placeholder="Enter short name" required minLength="3" />
                         </Form.Group><Form.Group className="mb-3" controlId="type">
                             <Form.Label>Type</Form.Label>
-                            <Form.Select value={form?.type ?? ""}  onChange={handleChange} name="type" required>
+                            <Form.Select value={form?.type ?? ""}  onChange={handleChange} name="type">
                                 <option value="" hidden>Select bank type</option>
                                 <option value="nuban">nuban</option>
                             </Form.Select>

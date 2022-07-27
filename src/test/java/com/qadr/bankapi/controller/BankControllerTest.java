@@ -2,7 +2,6 @@ package com.qadr.bankapi.controller;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.qadr.bankapi.model.Bank;
-import com.qadr.bankapi.model.BankType;
 import com.qadr.bankapi.model.Country;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,7 +18,6 @@ import org.springframework.test.web.servlet.result.MockMvcResultMatchers;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
-import java.util.Objects;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
 import static org.mockito.Mockito.verify;
@@ -36,7 +34,7 @@ class BankControllerTest {
     private List<Bank> getBankList(){
         ArrayList<Bank> banks = new ArrayList<>();
         Bank bank = new Bank();
-        bank.setType(BankType.nuban);
+        bank.setType("nuban");
         bank.setCode("4214");
         bank.setLongCode("4214873587");
         bank.setCreatedTime(new Date());
@@ -47,7 +45,7 @@ class BankControllerTest {
         banks.add(bank);
 
         Bank bank1 = new Bank();
-        bank1.setType(BankType.nuban);
+        bank1.setType("nuban");
         bank1.setCode("4214");
         bank1.setLongCode("4214873587");
         bank1.setCreatedTime(new Date());

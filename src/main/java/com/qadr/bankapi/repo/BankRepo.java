@@ -15,7 +15,7 @@ import java.util.Optional;
 public interface BankRepo extends JpaRepository<Bank, Integer> {
     List<Bank> findByType(String type);
     Optional<Bank> findByAlias(String name);
-    Optional<Bank> findByCode(String code);
+    List<Bank> findByCode(String code);
 
     @Modifying
     @Query("UPDATE Bank b SET b.enabled=?2 WHERE b.id=?1")

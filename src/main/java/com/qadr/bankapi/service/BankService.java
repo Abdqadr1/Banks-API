@@ -16,15 +16,19 @@ import java.util.*;
 
 @Service @Transactional
 public class BankService {
-    public static final int BANKS_PER_PAGE = 3;
+    public static final int BANKS_PER_PAGE = 8;
     @Autowired private BankRepo bankRepo;
 
     private void validateBank(Bank bank){
-        Optional<Bank> bankOptional = bankRepo.findByCode(bank.getCode());
-        if (bankOptional.isPresent() && !bankOptional.get().getId().equals(bank.getId())) {
-            throw new CustomException("Sort code already exists!", HttpStatus.BAD_REQUEST);
+        Optional<Bank> bankOptional;
+        if(bank.getCode() != null && !bank.getCode().isBlank()){
+            List<Bank> banks = bankRepo.findByCode(bank.getCode());
+            if (banks.size() > 0 && banks.stream().noneMatch(b -> b.getId().equals(bank.getId()))) {
+                throw new CustomException("Sort code already exists!", HttpStatus.BAD_REQUEST);
+            }
         }
-        bankOptional = bankRepo.findByCode(bank.getAlias());
+
+        bankOptional = bankRepo.findByAlias(bank.getAlias());
         if (bankOptional.isPresent() && !bankOptional.get().getId().equals(bank.getId())) {
             throw new CustomException("Alias already exists!", HttpStatus.BAD_REQUEST);
         }
@@ -68,7 +72,7 @@ public class BankService {
     }
 
     public List<Bank> getAllBanks() {
-        return bankRepo.findAll(Sort.by("fullName").ascending());
+        return bankRepo.findAll(Sort.by("name").ascending());
     }
 
     public Bank deleteBankById(int id) {
