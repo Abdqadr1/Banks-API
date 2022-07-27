@@ -82,10 +82,15 @@ public class BankService {
     }
 
 
-    public Map<String, Object> getBankPage(int pageNumber) {
+    public Map<String, Object> getBankPage(int pageNumber, String keyword) {
         Sort sort = Sort.by("name").ascending();
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, BANKS_PER_PAGE, sort);
-        Page<Bank> page = bankRepo.findAll(pageRequest);
+        Page<Bank> page;
+        if(keyword != null && !keyword.isBlank()){
+            page = bankRepo.searchBanks(keyword, pageRequest);
+        }else{
+            page = bankRepo.findAll(pageRequest);
+        }
         int startCount = (pageNumber-1) * BANKS_PER_PAGE + 1;
         int endCount = BANKS_PER_PAGE * pageNumber;
         endCount = (endCount > page.getTotalElements()) ? (int) page.getTotalElements() : endCount;

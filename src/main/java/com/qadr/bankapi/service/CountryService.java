@@ -1,6 +1,7 @@
 package com.qadr.bankapi.service;
 
 import com.qadr.bankapi.errors.CustomException;
+import com.qadr.bankapi.model.Bank;
 import com.qadr.bankapi.model.Country;
 import com.qadr.bankapi.repo.CountryRepo;
 import org.springframework.data.domain.Page;
@@ -45,10 +46,15 @@ public record CountryService(CountryRepo countryRepo) {
                 .orElseThrow(()-> new CustomException("Could not find country with id " + id, HttpStatus.BAD_REQUEST));
     }
 
-    public Map<String, Object> getCountryPage(Integer pageNumber){
+    public Map<String, Object> getCountryPage(Integer pageNumber, String keyword){
         Sort sort = Sort.by("name").ascending();
         PageRequest pageRequest = PageRequest.of(pageNumber - 1, COUNTRY_PER_PAGE, sort);
-        Page<Country> page = countryRepo.findAll(pageRequest);
+        Page<Country> page;
+        if(keyword != null && !keyword.isBlank()){
+            page = countryRepo.searchCountries(keyword, pageRequest);
+        }else{
+            page = countryRepo.findAll(pageRequest);
+        }
         int startCount = (pageNumber-1) * COUNTRY_PER_PAGE + 1;
         int endCount = COUNTRY_PER_PAGE * pageNumber;
         endCount = (endCount > page.getTotalElements()) ? (int) page.getTotalElements() : endCount;

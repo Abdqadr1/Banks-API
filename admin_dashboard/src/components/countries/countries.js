@@ -1,8 +1,6 @@
 import React from 'react';
 import axios from "axios";
-import Table from "react-bootstrap/Table";
 import Country from './country';
-import Container from 'react-bootstrap/Container';
 import NavBar from '../navbar';
 import MyPagination from '../traces/pagination';
 import { Navigate } from 'react-router-dom';
@@ -10,11 +8,13 @@ import { SPINNERS_BORDER } from '../utilities';
 import AddEditModal from './add_update';
 import DeleteModal from '../delete_modal';
 import MessageModal from "../message_modal"
+import { Row, Col, Form, Table, Container, Button } from 'react-bootstrap';
 
 class Countries extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            keyword: "",
             countries: [],
             add_edit: {show: false,country: {}},
             delete: {show: false,id: 0 },
@@ -30,7 +30,9 @@ class Countries extends React.Component {
         this.serverURl = process.env.REACT_APP_COUNTRY_URL;
         this.abortController = new AbortController();
         this.fetchCountries = this.fetchCountries.bind(this);
+        this.searchBanks = this.searchBanks.bind(this);
         this.delete = this.delete.bind(this);
+        this.clearKeyword = this.clearKeyword.bind(this);
     }
 
     showModal = (which, id) => {
@@ -106,9 +108,10 @@ class Countries extends React.Component {
         this.fetchCountries(1);
     }
 
-    fetchCountries(pageNumber) {
+    fetchCountries(pageNumber, keyword) {
+        keyword = keyword ?? this.state.keyword;
         this.setState(s => ({ loading: true }));
-        const url = `${this.serverURl}/page/${pageNumber}`;
+        const url = `${this.serverURl}/page/${pageNumber}?keyword=${keyword}`;
          axios.get(url,{
             headers: {
                 "Authorization": "Bearer " + this.state.user?.access_token
@@ -136,6 +139,16 @@ class Countries extends React.Component {
                 this.setState(s => ({loading: false}))
             })
     }
+
+    searchBanks(e) {
+        e.preventDefault();
+        this.fetchCountries(1);
+    }
+    clearKeyword() {
+        this.setState({keyword: ""})
+        this.fetchCountries(1, "")
+    }
+
     componentWillUnmount() {
         this.abortController.abort();
     }
@@ -156,11 +169,31 @@ class Countries extends React.Component {
                             <NavBar />
                             <Container>
                                 <>
-                                    <div className="d-flex justify-content-start my-3">
-                                        <span className="material-icons fs-1 text-secondary" onClick={() => this.showModal("add")}>
-                                            note_add
-                                        </span>
-                                    </div>
+                                    <Row className="justify-content-start my-3">
+                                        <Col xs={11} md={4}>
+                                            <span className="material-icons fs-1 text-secondary" onClick={() => this.showModal("add")}>
+                                                note_add
+                                            </span>
+                                        </Col>
+                                        <Col xs={11} md={8}>
+                                            <Form className="d-flex flex-wrap justify-content-center" onSubmit={this.searchBanks}>
+                                                <div className="mt-2 col-md-7 col-11">
+                                                <Form.Control value={this.state.keyword} onChange={e=>this.setState({keyword: e.target.value})} placeholder="Enter keyword"
+                                                    required minLength="2" /> 
+                                                </div>
+                                                <div className="mt-2 col-md-5 col-11 ps-2">
+                                                    <Button variant="primary" className="mx-1" type="submit" alt="search">
+                                                        <span title="Search keyword" className="material-icons fs-6 mb-0"> search </span>
+                                                    </Button>
+                                                    <Button onClick={this.clearKeyword} variant="secondary" className="mx-1" type="button" alt="clear search">
+                                                        <span title="clear keyword" className="material-icons fs-6 mb-0"> clear_all </span>
+                                                    </Button>  
+                                                </div>
+                                                
+                                            </Form>
+                                        
+                                        </Col>
+                                    </Row>
                                     <Table striped bordered hover size="sm">
                                         <thead className="bg-light text-dark">
                                             <tr>
@@ -175,7 +208,7 @@ class Countries extends React.Component {
                                             {
                                                 (this.state.countries.length > 0)
                                                     ? this.state.countries.map(country => <Country key={country.id} {...country} showModal={this.showModal} />)
-                                                    : <tr><td colSpan={4} className="text-center">No Country found</td></tr>
+                                                    : <tr><td colSpan={5} className="text-center">No Country found</td></tr>
                                             }
                                         </tbody>
                                     </Table>

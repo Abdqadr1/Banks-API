@@ -36,7 +36,8 @@ public class CountryController {
 
 
     @GetMapping("/page/{number}")
-    public Map<String, Object> getCountryPage(@PathVariable("number") Integer pageNumber){
-        return countryService.getCountryPage(pageNumber);
+    public Map<String, Object> getCountryPage(@PathVariable("number") Integer pageNumber,
+                                              @RequestParam(value = "keyword", defaultValue = "") String keyword){
+        return countryService.getCountryPage(pageNumber, keyword);
     }
 }

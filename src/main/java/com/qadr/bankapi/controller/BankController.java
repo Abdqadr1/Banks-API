@@ -36,8 +36,9 @@ public class BankController {
 
 
     @GetMapping("/page/{number}")
-    public Map<String, Object> getBankPage(@PathVariable("number") Integer pageNumber){
-        return bankService.getBankPage(pageNumber);
+    public Map<String, Object> getBankPage(@PathVariable("number") Integer pageNumber,
+                                           @RequestParam(value = "keyword", defaultValue = "") String keyword){
+        return bankService.getBankPage(pageNumber, keyword);
     }
 
     @GetMapping("/all")

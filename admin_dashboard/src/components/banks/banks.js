@@ -17,6 +17,7 @@ class Banks extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
+            keyword: "",
             banks: [],
             countries: [],
             edit: {show: false,bank: {}},
@@ -35,6 +36,7 @@ class Banks extends React.Component {
         this.abortController = new AbortController();
         this.updateEnabled = this.updateEnabled.bind(this);
         this.fetchBanks = this.fetchBanks.bind(this);
+        this.searchBanks = this.searchBanks.bind(this);
         this.delete = this.delete.bind(this);
         this.handleWindowWidthChange = this.handleWindowWidthChange.bind(this);
     }
@@ -143,9 +145,10 @@ class Banks extends React.Component {
         }
     }
 
-    fetchBanks(pageNumber) {
+    fetchBanks(pageNumber, keyword) {
         this.setState(s => ({ loading: true }));
-        const url = `${this.serverURl}/page/${pageNumber}`;
+        keyword = keyword ?? this.state.keyword;
+        const url = `${this.serverURl}/page/${pageNumber}?keyword=${keyword}`;
          axios.get(url,{
             headers: {
                 "Authorization": "Bearer " + this.state.user?.access_token
@@ -173,6 +176,11 @@ class Banks extends React.Component {
             .finally(() => {
                 this.setState(s => ({loading: false}))
             })
+    }
+
+    searchBanks(keyword) {
+        this.setState({ keyword });
+        this.fetchBanks(1, keyword);
     }
 
     updateEnabled(id, status) {
@@ -224,7 +232,7 @@ class Banks extends React.Component {
                         :
                         <React.Fragment>
                             <NavBar />
-                            <AddBank showModal={this.showModal} />
+                            <AddBank showModal={this.showModal} search={this.searchBanks} word={this.state.keyword} />
                             <Container>
                                 {
                                     (this.state.width >= 769)

@@ -1,6 +1,8 @@
 package com.qadr.bankapi.repo;
 
 import com.qadr.bankapi.model.Bank;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
@@ -18,5 +20,14 @@ public interface BankRepo extends JpaRepository<Bank, Integer> {
     @Modifying
     @Query("UPDATE Bank b SET b.enabled=?2 WHERE b.id=?1")
     void updateEnabled(Integer id, boolean enabled);
+
+    @Query("SELECT b FROM Bank b WHERE " +
+            "b.name LIKE %?1% OR " +
+            "b.alias LIKE %?1% OR " +
+            "b.code LIKE %?1% OR " +
+            "b.longCode LIKE %?1% OR " +
+            "b.type LIKE %?1% OR " +
+            "b.currency LIKE %?1%")
+    Page<Bank> searchBanks(String keyword, Pageable pageable);
 
 }
