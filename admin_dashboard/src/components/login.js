@@ -35,7 +35,7 @@ const Login = () => {
             signal: abortControllerRef.current.signal
         })
             .then(response => {
-                localStorage.setItem("user", JSON.stringify(response.data))
+                sessionStorage.setItem("user", JSON.stringify(response.data))
                 navigate('/banks');
         }).catch(error => {
             setAlert({
@@ -67,7 +67,7 @@ const Login = () => {
     return ( 
         <Container>
             <Row className="parent">
-                <Col xs={9} md={6} className='border p-3'>
+                <Col xs={9} md={7} lg={6} className='border p-3 rounded'>
                     <h3 className='text-center fw-bold'>Login</h3>
                     <Alert ref={alertRef} tabIndex={-1} variant={alert.variant} show={alert.show} dismissible onClose={toggleAlert}>
                         {alert.message}

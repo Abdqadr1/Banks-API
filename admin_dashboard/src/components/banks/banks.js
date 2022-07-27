@@ -27,7 +27,7 @@ class Banks extends React.Component {
                 number: 1, totalPages: 1, startCount: 1,
                 endCount: null, totalElements: null, numberPerPage: 1
             },
-            user: JSON.parse(localStorage.getItem('user')),
+            user: JSON.parse(sessionStorage.getItem('user')),
             loading: true,
             messageModal: { show: false, title: "", message: "" },
             width: window.innerWidth
@@ -133,7 +133,6 @@ class Banks extends React.Component {
             axios.get(countryUrl,{signal: this.abortController.signal})
                 .then(res => {
                     const data = res.data;
-                    sessionStorage.setItem("countries", data);
                     this.setState({ countries: data });
             })
             .catch(error => {

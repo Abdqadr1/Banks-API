@@ -1,7 +1,6 @@
 package com.qadr.bankapi.service;
 
 import com.qadr.bankapi.errors.CustomException;
-import com.qadr.bankapi.model.Bank;
 import com.qadr.bankapi.model.Country;
 import com.qadr.bankapi.repo.CountryRepo;
 import org.springframework.data.domain.Page;
@@ -9,7 +8,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.HashMap;
 import java.util.List;

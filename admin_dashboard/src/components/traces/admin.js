@@ -41,7 +41,7 @@ class Admin extends React.Component{
                     count: 0, time: ''
                 },
             },
-            user: JSON.parse(localStorage.getItem("user")),
+            user: JSON.parse(sessionStorage.getItem("user")),
             loading: false,
         }
         this.serverUrl = process.env.REACT_APP_ACTUATOR;

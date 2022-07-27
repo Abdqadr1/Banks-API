@@ -22,7 +22,7 @@ class Countries extends React.Component {
                 number: 1, totalPages: 1, startCount: 1,
                 endCount: null, totalElements: null, numberPerPage: 1
             },
-            user: JSON.parse(localStorage.getItem('user')),
+            user: JSON.parse(sessionStorage.getItem('user')),
             loading: true,
             messageModal: { show: false, title: "", message: "" },
             width: window.innerWidth
@@ -151,10 +151,6 @@ class Countries extends React.Component {
 
     componentWillUnmount() {
         this.abortController.abort();
-    }
-
-    listCountries(countries, type) {
-        return 
     }
 
     render() {
