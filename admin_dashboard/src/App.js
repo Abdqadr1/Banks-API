@@ -4,12 +4,12 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 import Admin from './components/traces/admin';
 import Login from './components/login';
 import Logout from './components/logout';
-import { HashRouter, Route, Routes } from 'react-router-dom';
+import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import Countries from './components/countries/countries';
 
 function App() {
   return (
-    <HashRouter>
+    <BrowserRouter>
       <div className="App">
         <Routes>
           <Route exact path='/' element={<Login />} />
@@ -22,7 +22,7 @@ function App() {
           <Route path='*' element={<h2 className='p-5'>Not found</h2>} />
         </Routes>
       </div>
-    </HashRouter>
+    </BrowserRouter>
     
   );
 }

@@ -15,9 +15,6 @@ const assets = [
     "/logo144.png",
     "/site-logo.ico"
 ];
-const dynamicAssets = [
-    "/serviceWorker.js"
-]
 
 this.addEventListener("install", event => {
     event.waitUntil(
@@ -44,16 +41,17 @@ this.addEventListener("fetch", evt => {
     evt.respondWith(
         caches.match(evt.request)
             .then(cacheRes => {
-                return cacheRes ?? fetch(evt.request).then(fetchRes => {
-                    return caches.open(cacheNames[1]).then(cache => {
-                        const url = evt.request.url;
-                        if (dynamicAssets.some(s => url.endsWith(s))) { 
-                            // console.log(url);
-                            cache.put(url, fetchRes.clone());
-                        } 
-                        return fetchRes;
-                    })
-                });
+                return cacheRes ?? fetch(evt.request);
+                //     .then(fetchRes => {
+                //     return caches.open(cacheNames[1]).then(cache => {
+                //         // const url = evt.request.url;
+                //         // if (dynamicAssets.some(s => url.endsWith(s))) { 
+                //         //     // console.log(url);
+                //         //     cache.put(url, fetchRes.clone());
+                //         // } 
+                //         return fetchRes;
+                //     })
+                // });
             })
     )
 })

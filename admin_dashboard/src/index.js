@@ -18,8 +18,8 @@ reportWebVitals();
 (function () {
   if ("serviceWorker" in navigator) {
     const url = process.env.PUBLIC_URL+"/serviceWorker.js";
-    navigator.serviceWorker.register(url).catch(() => {
-      console.error("could not register service worker");
+    navigator.serviceWorker.register(url).catch((e) => {
+      console.error("could not register service worker", e);
     })
   }
 })();
