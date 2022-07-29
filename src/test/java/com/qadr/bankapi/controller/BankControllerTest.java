@@ -5,10 +5,13 @@ import com.qadr.bankapi.model.Bank;
 import com.qadr.bankapi.model.Country;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.autoconfigure.orm.jpa.DataJpaTest;
 import org.springframework.boot.test.autoconfigure.orm.jpa.TestEntityManager;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
+import org.springframework.security.test.context.support.WithMockUser;
+import org.springframework.test.annotation.Rollback;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 import org.springframework.test.web.servlet.ResultActions;
@@ -19,18 +22,15 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
-import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
-import static org.mockito.Mockito.verify;
+import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 import static org.springframework.test.web.servlet.result.MockMvcResultHandlers.print;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.status;
-import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.get;
 @SpringBootTest
 @AutoConfigureMockMvc
+@Rollback
 class BankControllerTest {
     @Autowired private MockMvc mockMvc;
-    @Autowired private TestEntityManager entityManager;
     ObjectMapper mapper = new ObjectMapper();
-
     private List<Bank> getBankList(){
         ArrayList<Bank> banks = new ArrayList<>();
         Bank bank = new Bank();
@@ -58,13 +58,12 @@ class BankControllerTest {
         return banks;
     }
 
-
     @Test
+    @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN"})
     void shouldCreateUser() throws Exception {
-
         List<Bank> banks = getBankList();
 
-        mockMvc.perform(MockMvcRequestBuilders.post("/api/add")
+        mockMvc.perform(MockMvcRequestBuilders.post("/bank/admin/add")
                         .content(mapper.writeValueAsString(banks.get(0)))
                         .contentType(MediaType.APPLICATION_JSON))
                 .andExpect(status().isOk())
@@ -77,9 +76,10 @@ class BankControllerTest {
 
 //        when(bankService.getAll()).thenReturn(banks);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/bank"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/bank/all"))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(2));
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").isNotEmpty());
     }
 
     @Test
@@ -88,9 +88,11 @@ class BankControllerTest {
 
 //        when(bankService.getBank("UBA")).thenReturn(banks.get(0));
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/name/{name}", "UBA"))
+        var alias = "zenith-bank";
+        mockMvc.perform(MockMvcRequestBuilders.get("/bank/alias/{alias}", alias))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.name").value(banks.get(0).getName()));
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.alias").value(alias));
     }
 
     @Test
@@ -99,12 +101,14 @@ class BankControllerTest {
 
 //        when(bankService.getBanks("commercial")).thenReturn(banks);
 
-        mockMvc.perform(MockMvcRequestBuilders.get("/api/type/{type}", "commercial"))
+        mockMvc.perform(MockMvcRequestBuilders.get("/bank/type/{type}", "nuban"))
                 .andExpect(status().isOk())
-                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").value(banks.size()));
+                .andDo(print())
+                .andExpect(MockMvcResultMatchers.jsonPath("$.size()").isNotEmpty());
     }
 
     @Test
+    @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN"})
     void shouldDeleteBankById() throws Exception {
         List<Bank> banks = getBankList();
 
@@ -112,7 +116,7 @@ class BankControllerTest {
 //        when(bankService.deleteBank(argumentMatchers.capture()))
 //                .thenReturn(banks.get(0));
 
-        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.delete("/bank/delete/{id}", "1"))
+        ResultActions response = mockMvc.perform(MockMvcRequestBuilders.delete("/bank/admin/delete/{id}", "328"))
                 .andExpect(status().isOk());
 //        verify(bankService).deleteBank(argumentMatchers.capture());
 
@@ -121,25 +125,9 @@ class BankControllerTest {
     }
 
     @Test
-    void shouldEditBankById() throws Exception {
-        List<Bank> banks = getBankList();
-
-//        ArgumentCaptor<Integer> argumentMatchers = ArgumentCaptor.forClass(Integer.class);
-//        when(bankService.updateBank(anyInt(), any(Bank.class)))
-//                .thenReturn(banks.get(1));
-//
-//        ResultActions response=mockMvc.perform(MockMvcRequestBuilders.put("/bank/edit/{id}", "1")
-//                        .content(mapper.writeValueAsString(banks.get(0)))
-//                        .contentType(MediaType.APPLICATION_JSON))
-//                .andExpect(status().isOk());
-//        verify(bankService).updateBank(argumentMatchers.capture(), any(Bank.class));
-//        response.andExpect(MockMvcResultMatchers.jsonPath("$.fullName")
-//                .value(banks.get(1).getFullName()));
-    }
-
-    @Test
+    @WithMockUser(username = "admin@gmail.com", roles = {"ADMIN"})
     void testGetBankPage() throws Exception{
-        String url = "/bank/page/1";
+        String url = "/bank/admin/page/1";
         MvcResult mvcResult = mockMvc.perform(get(url)).andExpect(status().isOk())
                 .andDo(print()).andReturn();
     }

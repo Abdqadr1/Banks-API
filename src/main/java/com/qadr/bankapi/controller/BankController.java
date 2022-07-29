@@ -46,7 +46,8 @@ public class BankController {
 
 
     @PostMapping("/admin/add")
-    public Bank addBank(Bank bank){
+    public Bank addBank(@RequestBody Bank bank){
+        System.out.println(bank);
         return bankService.addBank(bank);
     }
 

@@ -1,4 +1,4 @@
-const cacheNames = ["static-assets-v1.0", "dynamic-assets-v1.0"];
+const cacheNames = ["static-assets-v1.1", "dynamic-assets-v1.0"];
 const assets = [
     "/",
     "/index.html",
@@ -22,7 +22,7 @@ const dynamicAssets = [
 this.addEventListener("install", event => {
     event.waitUntil(
         caches.open(cacheNames[0]).then(cache => {
-            console.log("caching static assets");
+            // console.log("caching static assets");
             cache.addAll(assets)
         })
     )
@@ -41,17 +41,16 @@ this.addEventListener("activate", e => {
 });
 
 this.addEventListener("fetch", evt => {
-    // const url = evt.request.url;
-    // const method = evt.request.method;
-    // console.log("fetch url: ", evt);
     evt.respondWith(
         caches.match(evt.request)
             .then(cacheRes => {
                 return cacheRes ?? fetch(evt.request).then(fetchRes => {
                     return caches.open(cacheNames[1]).then(cache => {
-                        const uri = evt.request.uri;
-                        if()
-                        cache.put(, fetchRes.clone());
+                        const url = evt.request.url;
+                        if (dynamicAssets.some(s => url.endsWith(s))) { 
+                            // console.log(url);
+                            cache.put(url, fetchRes.clone());
+                        } 
                         return fetchRes;
                     })
                 });
