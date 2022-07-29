@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import '../css/login.css'
 import {useEffect, useRef, useState } from "react";
-import { listFormData, SPINNERS_BORDER_HTML } from "./utilities";
+import { isOffline, listFormData, SPINNERS_BORDER_HTML } from "./utilities";
 
 const Login = () => {
     const abortControllerRef = useRef();
@@ -31,17 +31,25 @@ const Login = () => {
         button.innerHTML = SPINNERS_BORDER_HTML;
         // on error
         axios.post("/bank/authenticate", data, {
+            timeout: 40000,
             signal: abortControllerRef.current.signal
         })
-            .then(response => {
+        .then(response => {
                 sessionStorage.setItem("user", JSON.stringify(response.data))
                 navigate('/banks');
         }).catch(error => {
+            console.log(error);
+            let message = error?.response?.data?.message ?? "Something went wrong";
+            if (isOffline) {
+                console.warn("You are offline");
+                message = "Check your internet connection";
+            }
             setAlert({
-                message: error?.response.data.message,
+                message,
                 variant: 'danger',
                 class: 'text-center py-2'
-            })
+            });
+        }).finally(() => {
             button.disabled = false;
             button.textContent = text;
         })
@@ -68,7 +76,8 @@ const Login = () => {
             <Row className="parent">
                 <Col xs={9} md={7} lg={6} className='border p-3 rounded'>
                     <h3 className='text-center fw-bold'>Login</h3>
-                    <Alert ref={alertRef} tabIndex={-1} variant={alert.variant} show={alert.show} dismissible onClose={toggleAlert}>
+                    <Alert ref={alertRef} tabIndex={-1} variant={alert.variant} show={alert.show}
+                        dismissible onClose={toggleAlert} style={{fontSize: '.8em'}}>
                         {alert.message}
                     </Alert>
                     <Form onSubmit={handleSubmit}>

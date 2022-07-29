@@ -5,6 +5,8 @@ export const timeFormat = (dateString) => {
         return new Intl.DateTimeFormat('en-GB', { dateStyle: 'long', timeStyle: 'short' })
             .format(dateString);
 }
+
+export const isOffline = () => !navigator.onLine;
     
  export const formatBytes = (size) => {
         if (size === 0) return "0 Byte";

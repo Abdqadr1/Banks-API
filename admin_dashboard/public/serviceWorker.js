@@ -1,4 +1,4 @@
-const cacheName = "static";
+const cacheNames = ["static-assets-v1.0", "dynamic-assets-v1.0"];
 const assets = [
     "/",
     "/index.html",
@@ -12,10 +12,16 @@ const assets = [
     "/favicon.ico",
     "/logo512.png",
     "/logo192.png",
+    "/logo144.png",
+    "/site-logo.ico"
+];
+const dynamicAssets = [
+    "/serviceWorker.js"
 ]
+
 this.addEventListener("install", event => {
     event.waitUntil(
-        caches.open(cacheName).then(cache => {
+        caches.open(cacheNames[0]).then(cache => {
             console.log("caching static assets");
             cache.addAll(assets)
         })
@@ -24,17 +30,31 @@ this.addEventListener("install", event => {
 });
 
 this.addEventListener("activate", e => {
-    console.log("worker activated");
+    e.waitUntil(
+        caches.keys().then(keys => {
+            return Promise.all(
+                keys.filter(key => cacheNames.some(k => k !== key))
+                    .map(k => caches.delete(k))
+            );
+        })
+    )
 });
 
 this.addEventListener("fetch", evt => {
-    const url = evt.request.url;
-    const method = evt.request.method;
-    console.log("fetch url: ", evt);
+    // const url = evt.request.url;
+    // const method = evt.request.method;
+    // console.log("fetch url: ", evt);
     evt.respondWith(
         caches.match(evt.request)
             .then(cacheRes => {
-                return cacheRes ?? fetch(evt.request);
+                return cacheRes ?? fetch(evt.request).then(fetchRes => {
+                    return caches.open(cacheNames[1]).then(cache => {
+                        const uri = evt.request.uri;
+                        if()
+                        cache.put(, fetchRes.clone());
+                        return fetchRes;
+                    })
+                });
             })
     )
 })
