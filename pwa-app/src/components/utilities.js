@@ -7,6 +7,8 @@ export const timeFormat = (dateString) => {
 }
 
 export const isOffline = () => !navigator.onLine;
+
+export const isTimeout = code => code && code === "ECONNABORTED";
     
  export const formatBytes = (size) => {
         if (size === 0) return "0 Byte";

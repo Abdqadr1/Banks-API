@@ -8,7 +8,7 @@ import Button from 'react-bootstrap/Button';
 import axios from 'axios';
 import '../css/login.css'
 import {useEffect, useRef, useState } from "react";
-import { isOffline, listFormData, SPINNERS_BORDER_HTML } from "./utilities";
+import { isTimeout, listFormData, SPINNERS_BORDER_HTML } from "./utilities";
 
 const Login = () => {
     const abortControllerRef = useRef();
@@ -38,11 +38,9 @@ const Login = () => {
                 sessionStorage.setItem("user", JSON.stringify(response.data))
                 navigate('/banks');
         }).catch(error => {
-            console.log(error);
             let message = error?.response?.data?.message ?? "Something went wrong";
-            if (isOffline) {
-                console.warn("You are offline");
-                message = "Check your internet connection";
+            if (isTimeout(error?.code)) {
+                message = "timeout, check your internet connection";
             }
             setAlert({
                 message,

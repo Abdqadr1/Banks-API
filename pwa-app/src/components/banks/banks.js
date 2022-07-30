@@ -7,7 +7,7 @@ import AddBank from './addBank'
 import NavBar from '../navbar';
 import MyPagination from '../traces/pagination';
 import { Navigate } from 'react-router-dom';
-import { SPINNERS_BORDER, useThrottle } from '../utilities';
+import { isTimeout, SPINNERS_BORDER, useThrottle } from '../utilities';
 import EditModal from './edit_bank';
 import AddModal from './add_bank';
 import DeleteModal from '../delete_modal';
@@ -81,6 +81,7 @@ class Banks extends React.Component {
             headers: {
                 "Authorization": "Bearer " + this.state.user?.access_token
             },
+            timeout: 90000,
             signal: this.abortController.signal
         })
             .then(() => {
@@ -95,15 +96,17 @@ class Banks extends React.Component {
                 }))
             })
             .catch(error => {
-                if (error.response) {
-                    if (error.response.status === 406) this.setState(() => ({ user: {} }))
-                    this.setState(s => ({
-                        messageModal: {
-                            ...s.messageModal, show: true,
-                            title: "Delete Bank", message: "Could not delete bank"
-                        }
-                    }))
+                const response = error?.response;
+                if (response?.status === 406) this.setState(() => ({ user: {} }));
+                let message = response?.data?.message ?? "Could not delete bank";
+                if (isTimeout(error?.code)) {
+                    message = "timeout, check your internet connection";
                 }
+                this.setState(s => ({
+                    messageModal: {
+                        ...s.messageModal, show: true, title: "Delete Bank", message
+                    }
+                }))
             }).finally(() => {
                 this.setState({ delete: { show: false, id: -1 }})
                 cb();
@@ -130,12 +133,18 @@ class Banks extends React.Component {
         if (this.state.countries.length < 1) {
             const countryUrl = process.env.REACT_APP_URL + "country/all";
             this.setState(s => ({ loading: true }));
-            axios.get(countryUrl,{signal: this.abortController.signal})
+            axios.get(countryUrl,{
+                timeout: 90000,
+                signal: this.abortController.signal
+            })
                 .then(res => {
                     const data = res.data;
                     this.setState({ countries: data });
             })
             .catch(error => {
+                if (isTimeout(error?.code)) {
+                    alert("timeout, check your internet connection");
+                }
                 if (error?.response?.status === 406) this.setState(() => ({ user: { } } ))
             })
             .finally(() => {
@@ -152,6 +161,7 @@ class Banks extends React.Component {
             headers: {
                 "Authorization": "Bearer " + this.state.user?.access_token
              },
+            timeout: 90000,
              signal: this.abortController.signal
          })
              .then(res => {
@@ -170,6 +180,9 @@ class Banks extends React.Component {
                  this.fetchCountries();
             })
              .catch(error => {
+                if (isTimeout(error?.code)) {
+                    alert("timeout, check your internet connection");
+                }
                 if (error?.response?.status === 406) this.setState(() => ({ user: { } } ))
             })
             .finally(() => {

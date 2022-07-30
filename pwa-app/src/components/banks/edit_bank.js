@@ -5,7 +5,7 @@ import {useEffect, useRef, useState } from 'react';
 import Alert from 'react-bootstrap/Alert';
 import { useNavigate } from 'react-router';
 import axios from 'axios';
-import { listFormData, SPINNERS_BORDER_HTML} from '../utilities';
+import { isTimeout, listFormData, SPINNERS_BORDER_HTML} from '../utilities';
 
 const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
     const [form, setForm] = useState({});
@@ -52,6 +52,7 @@ const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
             headers: {
                 "Authorization" : "Bearer " + token
             },
+            timeout: 90000,
             signal: abortControllerRef.current.signal
         })
             .then(res => {
@@ -60,8 +61,11 @@ const EditModal = ({ hideModal, edit, editBank, token, countries }) => {
             })
             .catch(error => {
                 const response = error?.response;
-                if (response.status === 406) navigate("/login/1");
-                const message = response.data.message ?? "Something went wrong";
+                if (response?.status === 406) navigate("/login/1");
+                let message = response?.data?.message ?? "Something went wrong";
+                if (isTimeout(error?.code)) {
+                    message = "timeout, check your internet connection";
+                }
                 setAlert(s => ({...s, variant: "danger", show: true, message}))
             })
             .finally(() => {

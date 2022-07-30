@@ -4,7 +4,7 @@ import Country from './country';
 import NavBar from '../navbar';
 import MyPagination from '../traces/pagination';
 import { Navigate } from 'react-router-dom';
-import { SPINNERS_BORDER } from '../utilities';
+import { SPINNERS_BORDER,isTimeout } from '../utilities';
 import AddEditModal from './add_update';
 import DeleteModal from '../delete_modal';
 import MessageModal from "../message_modal"
@@ -64,6 +64,7 @@ class Countries extends React.Component {
             headers: {
                 "Authorization": "Bearer " + this.state.user?.access_token
             },
+            timeout: 90000,
             signal: this.abortController.signal
         })
             .then(() => {
@@ -78,15 +79,17 @@ class Countries extends React.Component {
                 }))
             })
             .catch(error => {
-                if (error.response) {
-                    if (error.response.status === 406) this.setState(() => ({ user: {} }))
-                    this.setState(s => ({
-                        messageModal: {
-                            ...s.messageModal, show: true,
-                            title: "Delete Country", message: "Could not delete country"
-                        }
-                    }))
+                const response = error?.response;
+                if (response?.status === 406) this.setState(() => ({ user: {} }));
+                let message = response?.data?.message ?? "Could not delete country";
+                if (isTimeout(error?.code)) {
+                    message = "timeout, check your internet connection";
                 }
+                this.setState(s => ({
+                    messageModal: {
+                        ...s.messageModal, show: true, title: "Delete Country", message
+                    }
+                }))
             }).finally(() => {
                 this.setState({ delete: { show: false, id: -1 }})
                 cb();
@@ -116,6 +119,7 @@ class Countries extends React.Component {
             headers: {
                 "Authorization": "Bearer " + this.state.user?.access_token
              },
+            timeout: 90000,
              signal: this.abortController.signal
          })
              .then(res => {
@@ -133,7 +137,10 @@ class Countries extends React.Component {
                  }));
             })
             .catch(error => {
-                if (error?.response?.status === 406) this.setState(() => ({ user: { } } ))
+                if (error?.response?.status === 406) this.setState(() => ({ user: {} }))
+                if (isTimeout(error?.code)) {
+                    alert("timeout, check your internet connection");
+                }
             })
             .finally(() => {
                 this.setState(s => ({loading: false}))
