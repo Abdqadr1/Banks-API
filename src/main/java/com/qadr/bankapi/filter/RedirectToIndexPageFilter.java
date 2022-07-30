@@ -10,10 +10,10 @@ import java.util.List;
 
 @Component
 @Slf4j
-public class RedirectToIndexPage implements Filter {
+public class RedirectToIndexPageFilter implements Filter {
     List<String> strings = List.of(
-            "/bank/", "/country", "/static",
-            "/logo", "/favicon", "/manage"
+            "/bank/", "/country", "/static", "/manifest","/robots.txt",
+            "/logo", "/favicon", "/manage", "/site-logo", "/service"
     );
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -23,7 +23,7 @@ public class RedirectToIndexPage implements Filter {
         String requestURI = req.getRequestURI();
 
         if(strings.stream().anyMatch(requestURI::startsWith)){
-            System.out.println("request uri: "+requestURI);
+//            System.out.println("request uri: "+requestURI);
             chain.doFilter(request, response);
             return;
         }

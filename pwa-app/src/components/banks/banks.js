@@ -169,7 +169,7 @@ class Banks extends React.Component {
                  }));
                  this.fetchCountries();
             })
-            .catch(error => {
+             .catch(error => {
                 if (error?.response?.status === 406) this.setState(() => ({ user: { } } ))
             })
             .finally(() => {
