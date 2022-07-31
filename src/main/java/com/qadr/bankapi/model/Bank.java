@@ -41,6 +41,14 @@ public class Bank {
 
     private String currency;
 
+    public Bank(int id, String name, String alias, String type, String code){
+        this.id = id;
+        this.name = name;
+        this.alias = alias;
+        this.type = type;
+        this.code = code;
+    }
+
     @Override
     public boolean equals(Object o) {
         if (this == o) return true;

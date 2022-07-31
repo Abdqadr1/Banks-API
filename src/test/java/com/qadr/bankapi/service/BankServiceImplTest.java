@@ -8,6 +8,10 @@
 //import org.mockito.junit.jupiter.MockitoExtension;
 //import com.qadr.bankapi.errors.CustomException;
 //import com.qadr.bankapi.repo.BankRepo;
+//import org.springframework.beans.factory.annotation.Autowired;
+//import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
+//import org.springframework.boot.test.context.SpringBootTest;
+//import org.springframework.boot.test.mock.mockito.MockBean;
 //
 //import java.util.Optional;
 //
@@ -17,14 +21,14 @@
 //import static org.mockito.BDDMockito.given;
 //import static org.mockito.Mockito.*;
 //
-//@ExtendWith(MockitoExtension.class)
+//@SpringBootTest
+//@AutoConfigureMockMvc
 //class BankServiceImplTest {
-//    @Mock private BankRepo bankRepo;
-//    private BankService bankService;
+//    @MockBean private BankRepo bankRepo;
+//    @Autowired private BankService bankService;
 //
 //    @BeforeEach
 //    void setUp() {
-//        bankService = new BankService(bankRepo);
 //    }
 //
 //    @Test @DisplayName("Is add bank works well")
@@ -39,12 +43,12 @@
 //        ArgumentCaptor<Bank> bankArgumentCaptor = ArgumentCaptor.forClass(Bank.class);
 //        verify(bankRepo).save(bankArgumentCaptor.capture());
 //        Bank capturedBank = bankArgumentCaptor.getValue();
-//        verify(bankRepo).findBySortCode(capturedBank.getSortCode());
-//        assertThat(capturedBank).isEqualTo(bank);
+////        verify(bankRepo).findBySortCode(capturedBank.getSortCode());
+////        assertThat(capturedBank).isEqualTo(bank);
+////
+////        given(bankRepo.findBySortCode(bank.getSortCode())).willReturn(Optional.of(bank));
 //
-//        given(bankRepo.findBySortCode(bank.getSortCode())).willReturn(Optional.of(bank));
-//
-//        assertThatThrownBy(()-> bankService.addBank(bank))
+////        assertThatThrownBy(()-> bankService.addBank(bank))
 //                .isInstanceOf(CustomException.class)
 //                .hasMessageContaining("already exists");
 //

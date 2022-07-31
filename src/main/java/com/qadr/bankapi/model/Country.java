@@ -10,6 +10,7 @@ import java.util.Objects;
 @Getter
 @Setter
 @RequiredArgsConstructor
+@AllArgsConstructor
 @Table(name = "countries")
 public class Country {
     @Id

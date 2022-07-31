@@ -23,7 +23,7 @@ public class BankService {
         Optional<Bank> bankOptional;
         if(bank.getCode() != null && !bank.getCode().isBlank()){
             List<Bank> banks = bankRepo.findByCode(bank.getCode());
-            if (banks.size() > 0 && banks.stream().noneMatch(b -> b.getId().equals(bank.getId()))) {
+            if (banks.size() > 0 && banks.stream().anyMatch(b -> b.getId().equals(bank.getId()))) {
                 throw new CustomException("Sort code already exists!", HttpStatus.BAD_REQUEST);
             }
         }
@@ -55,7 +55,6 @@ public class BankService {
         getBankById(id);
         bankRepo.updateEnabled(id, enabled);
     }
-
 
     public Bank getBankById(int id) {
         Optional<Bank> bankOptional =  bankRepo.findById(id);
@@ -107,7 +106,4 @@ public class BankService {
         map.put("numberPerPage", BANKS_PER_PAGE);
         return map;
     }
-
-
-
 }
