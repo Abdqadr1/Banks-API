@@ -33,10 +33,10 @@ public record CountryService(CountryRepo countryRepo) {
         if(optional.isPresent() && !optional.get().getId().equals(country.getId())){
             throw new CustomException("Country code already exists", HttpStatus.BAD_REQUEST);
         }
-        optional = countryRepo.findByCallCode(country.getCallCode());
-        if(optional.isPresent() && !optional.get().getId().equals(country.getId())){
-            throw new CustomException("Country call code already exists", HttpStatus.BAD_REQUEST);
-        }
+//        optional = countryRepo.findByCallCode(country.getCallCode());
+//        if(optional.isPresent() && !optional.get().getId().equals(country.getId())){
+//            throw new CustomException("Country call code already exists", HttpStatus.BAD_REQUEST);
+//        }
     }
 
     private Country getById(Integer id){

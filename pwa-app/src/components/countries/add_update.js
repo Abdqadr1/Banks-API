@@ -104,6 +104,7 @@ const AddEditModal = ({ hideModal, add_edit, addEditCountry, token }) => {
                                 <option value="AUSTRALIA">AUSTRALIA</option>
                                 <option value="EUROPE">EUROPE</option>
                                 <option value="NORTH AMERICA">NORTH AMERICA</option>
+                                <option value="OCEANIA">OCEANIA</option>
                                 <option value="SOUTH AMERICA">SOUTH AMERICA</option>
                             </Form.Select>
                         </Form.Group>
