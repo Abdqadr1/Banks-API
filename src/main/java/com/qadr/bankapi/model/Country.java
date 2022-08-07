@@ -23,7 +23,7 @@ public class Country {
     @Column(unique = true)
     private String code;
 
-    @Column(unique = true)
+    @Column(unique = false)
     private String callCode;
 
     private String continent;
