@@ -110,7 +110,7 @@ const AddEditModal = ({ hideModal, add_edit, addEditCountry, token }) => {
                         </Form.Group>
                         <Form.Group className="mb-3" controlId="callCode">
                             <Form.Label>Call Code</Form.Label>
-                            <Form.Control value={form?.callCode ?? ""} onChange={handleChange} name="callCode" placeholder="Enter callCode" maxLength="5" />
+                            <Form.Control value={form?.callCode ?? ""} onChange={handleChange} name="callCode" placeholder="Enter callCode" maxLength="10" />
                         </Form.Group>
                         <Button variant="primary" type="submit">
                             Save Changes
