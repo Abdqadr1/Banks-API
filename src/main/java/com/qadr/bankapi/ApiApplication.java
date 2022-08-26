@@ -1,5 +1,6 @@
 package com.qadr.bankapi;
 
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.actuate.trace.http.HttpTraceRepository;
 import org.springframework.boot.actuate.trace.http.InMemoryHttpTraceRepository;
@@ -8,9 +9,11 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 
 @SpringBootApplication
+@Slf4j
 public class ApiApplication {
 
 	public static void main(String[] args) {
+		log.info("changes in code");
 		SpringApplication.run(ApiApplication.class, args);
 	}
 
