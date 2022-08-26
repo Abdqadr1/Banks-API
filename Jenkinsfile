@@ -9,7 +9,7 @@ pipeline {
         stage('Build Maven Project') {
             steps {
                 // Checkout code from github
-                checkout([$class: 'GitSCM', branches: [[name: '*/main'], [name: '*/master']], extensions: [], userRemoteConfigs: [[credentialsId: 'jenkins', url: 'https://github.com/Abdqadr1/api-q']]])
+                checkout([$class: 'GitSCM', branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'jenkins', url: 'https://github.com/Abdqadr1/api-q']]])
                 // clean install
                 bat "mvn clean install"
             }
