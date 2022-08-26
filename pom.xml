@@ -183,6 +183,7 @@
 				</configuration>
 			</plugin>
         </plugins>
+		<finalName>banks_api</finalName>
 	</build>
 
 </project>
