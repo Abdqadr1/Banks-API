@@ -14,7 +14,7 @@ public class ApiApplication {
 
 	public static void main(String[] args) {
 //		log.info("changes in code");
-		SpringApplication.run(ApiApplication.class, args);
+		SpringApplication. krun(ApiApplication.class, args);
 	}
 
 	// this bean turn on the httptrace actuator endpoint that has been turned off by default
