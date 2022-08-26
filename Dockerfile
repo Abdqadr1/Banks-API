@@ -4,6 +4,6 @@ MAINTAINER abd_qadr
 
 EXPOSE 8090
 
-COPY target/bank_api-1.0.jar bank_api-1.0.jar
+COPY target/api-1.0.jar api-1.0.jar
 
-ENTRYPOINT ["java", "-jar", "bank_api-1.0.jar"]
+ENTRYPOINT ["java", "-jar", "api-1.0.jar"]
