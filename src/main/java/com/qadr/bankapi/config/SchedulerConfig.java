@@ -9,8 +9,8 @@ import org.springframework.web.client.RestTemplate;
 
 import java.util.concurrent.TimeUnit;
 
-@EnableScheduling
-@Configuration
+//@EnableScheduling
+//@Configuration
 @Slf4j
 public class SchedulerConfig {
 
