@@ -13,7 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 public class ApiApplication {
 
 	public static void main(String[] args) {
-		log.info("changes in code");
+//		log.info("changes in code");
 		SpringApplication.run(ApiApplication.class, args);
 	}
 
