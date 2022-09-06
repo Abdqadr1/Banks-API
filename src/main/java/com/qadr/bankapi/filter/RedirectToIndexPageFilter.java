@@ -28,7 +28,7 @@ public class RedirectToIndexPageFilter implements Filter {
             return;
         }
 
-        // all requests not api or static will be handled by react.
+        // all requests path not in the list above will be redirected and handled by react.
         request.getRequestDispatcher("/").forward(request, response);
     }
 }
