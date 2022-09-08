@@ -40,7 +40,7 @@ class BankControllerTest {
         bank.setCreatedTime(new Date());
         bank.setAlias("zen");
         bank.setName("Zenith");
-        bank.setCountry(new Country(165));
+        bank.setCountry("NG");
         bank.setEnabled(true);
         banks.add(bank);
 
@@ -51,7 +51,7 @@ class BankControllerTest {
         bank1.setCreatedTime(new Date());
         bank1.setAlias("zen");
         bank1.setName("Zenith");
-        bank1.setCountry(new Country(165));
+        bank1.setCountry("NG");
         bank1.setEnabled(true);
         banks.add(bank1);
 

@@ -35,9 +35,7 @@ public class Bank {
 
     private boolean enabled;
 
-    @ManyToOne
-    @JoinColumn(name = "country_id")
-    private Country country;
+    private String country;
 
     private String currency;
 

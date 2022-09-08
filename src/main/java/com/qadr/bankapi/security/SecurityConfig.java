@@ -41,7 +41,8 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         });
         http.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS);
 
-        http.authorizeRequests().antMatchers(
+        http.authorizeRequests()
+                .antMatchers(
                 "/bank/admin/**", "/country/admin/**").hasRole("ADMIN");
 
         http.authorizeRequests().anyRequest().permitAll();

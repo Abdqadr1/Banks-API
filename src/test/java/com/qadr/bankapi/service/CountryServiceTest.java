@@ -3,10 +3,8 @@ package com.qadr.bankapi.service;
 import com.qadr.bankapi.errors.CustomException;
 import com.qadr.bankapi.model.Country;
 import com.qadr.bankapi.repo.CountryRepo;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
-import org.mockito.Mock;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.autoconfigure.web.servlet.AutoConfigureMockMvc;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -136,7 +134,6 @@ class CountryServiceTest {
                 return null;
             }
 
-            @NotNull
             @Override
             public Iterator<Country> iterator() {
                 return list.iterator();

@@ -2,9 +2,7 @@ package com.qadr.bankapi.service;
 
 import com.qadr.bankapi.errors.CustomException;
 import com.qadr.bankapi.model.Bank;
-import com.qadr.bankapi.model.Country;
 import com.qadr.bankapi.repo.BankRepo;
-import org.jetbrains.annotations.NotNull;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -124,7 +122,6 @@ class BankServiceTest {
                 return null;
             }
 
-            @NotNull
             @Override
             public Iterator<Bank> iterator() {
                 return list.iterator();

@@ -35,7 +35,7 @@ class BankRepoTest {
         bank.setCreatedTime(new Date());
         bank.setAlias("zen");
         bank.setName("Zenith");
-        bank.setCountry(country);
+        bank.setCountry(country.getCode());
         bank.setEnabled(true);
         Bank save = bankRepo.save(bank);
         assertThat(save).isNotNull();
