@@ -24,7 +24,8 @@ public class CustomHttpTraceFilter extends HttpTraceFilter {
                 request.getServletPath().contains("/country/admin")||
                 request.getServletPath().contains("/static/")||
                 request.getServletPath().contains("/favicon.ico")||
-                request.getServletPath().contains("/logo")||
+                request.getServletPath().contains("/serviceworker")||
+                request.getServletPath().contains("/auth")||
                 request.getServletPath().contains("/login");
     }
 }
