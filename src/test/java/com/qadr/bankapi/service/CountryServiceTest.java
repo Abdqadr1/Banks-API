@@ -13,10 +13,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
-import java.util.Iterator;
-import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+import java.util.*;
 import java.util.function.Function;
 
 import static org.assertj.core.api.AssertionsForClassTypes.assertThat;
@@ -56,7 +53,7 @@ class CountryServiceTest {
         given(repo.findById(anyInt())).willReturn(Optional.of(list.get(0)));
         given(repo.findByName(anyString())).willReturn(Optional.of(list.get(0)));
         given(repo.findByCode(anyString())).willReturn(Optional.of(list.get(1)));
-        given(repo.findByCallCode(anyString())).willReturn(Optional.of(list.get(2)));
+        given(repo.findByCallCode(anyString())).willReturn(list);
         given(repo.save(any(Country.class))).willReturn(list.get(1));
         Page<Country> page = new Page<>() {
             @Override
@@ -164,7 +161,7 @@ class CountryServiceTest {
     void saveCountry() {
         given(repo.findByName(anyString())).willReturn(Optional.empty());
         given(repo.findByCode(anyString())).willReturn(Optional.empty());
-        given(repo.findByCallCode(anyString())).willReturn(Optional.empty());
+        given(repo.findByCallCode(anyString())).willReturn(Collections.EMPTY_LIST);
         Country country = countryService.saveCountry(list.get(0));
         assertThat(country).isNotNull();
         assert(country.equals(list.get(1)));

@@ -93,9 +93,7 @@ public record CountryService(CountryRepo countryRepo) {
 
     }
 
-    public Country findByCallCode(String code) {
-        return countryRepo.findByCallCode(code)
-                .orElseThrow(()->new CustomException("Could not find country with call code "+code,
-                        HttpStatus.BAD_REQUEST));
+    public List<Country> findCountriesByCallCode(String code) {
+        return countryRepo.findByCallCode(code);
     }
 }

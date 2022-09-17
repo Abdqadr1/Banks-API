@@ -24,8 +24,8 @@ public class CountryController {
     }
 
     @GetMapping("/call_code/{code}")
-    public Country findCountryByCallCode(@PathVariable String code){
-        return countryService.findByCallCode(code);
+    public List<Country> findCountryByCallCode(@PathVariable String code){
+        return countryService.findCountriesByCallCode(code);
     }
 
     @GetMapping("/code/{code}")

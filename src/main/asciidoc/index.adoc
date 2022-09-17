@@ -1,0 +1,98 @@
+= Getting started
+Doc Writer <abolarinwaquadri@gmail.com>
+
+This is documentation for countries in the world and all bank in Nigeria. Its free.
+This service is running at http://api-env.eba-irpspqyp.us-east-1.elasticbeanstalk.com.
+
+You can access all the endpoint with GET request
+
+== Countries API
+
+=== Return all the countries
+
+.request
+include::{snippets}/getAllCountries/http-request.adoc[]
+
+.response
+include::{snippets}/getAllCountries/http-response.adoc[]
+
+=== Get countries by continent
+
+.request
+include::{snippets}/getCountriesByContinent/http-request.adoc[]
+
+.path variable
+include::{snippets}/getCountriesByContinent/path-parameters.adoc[]
+
+.response
+include::{snippets}/getCountriesByContinent/http-response.adoc[]
+
+=== Find country by its code
+
+.request
+include::{snippets}/findCountryByCode/http-request.adoc[]
+
+.path variable
+include::{snippets}/findCountryByCode/path-parameters.adoc[]
+
+.response
+include::{snippets}/findCountryByCode/http-response.adoc[]
+
+=== Get countries by call code
+
+.request
+include::{snippets}/findCountryByCallCode/http-request.adoc[]
+
+.path variable
+include::{snippets}/findCountryByCallCode/path-parameters.adoc[]
+
+.response
+include::{snippets}/findCountryByCallCode/http-response.adoc[]
+
+=== Find country by its name
+
+.request
+include::{snippets}/findCountryByName/http-request.adoc[]
+
+.path variable
+include::{snippets}/findCountryByName/path-parameters.adoc[]
+
+.response
+include::{snippets}/findCountryByName/http-response.adoc[]
+
+
+'''
+
+
+== Nigeria Banks API
+
+=== Return all the banks in Nigeria
+
+.request
+include::{snippets}/shouldReturnAllBanks/http-request.adoc[]
+
+.response
+include::{snippets}/shouldReturnAllBanks/http-response.adoc[]
+
+=== Get bank by alias in Nigeria
+
+.request
+include::{snippets}/shouldReturnBankWithName/http-request.adoc[]
+.path variable
+include::{snippets}/shouldReturnBankWithName/path-parameters.adoc[]
+.response
+include::{snippets}/shouldReturnBankWithName/http-response.adoc[]
+
+=== Get bank with type
+
+.request
+include::{snippets}/shouldReturnBankWithType/http-request.adoc[]
+
+.path variable
+include::{snippets}/shouldReturnBankWithType/path-parameters.adoc[]
+
+.response
+include::{snippets}/shouldReturnBankWithType/http-response.adoc[]
+
+
+That's it.

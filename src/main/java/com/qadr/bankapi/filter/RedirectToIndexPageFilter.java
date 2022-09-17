@@ -13,7 +13,7 @@ import java.util.List;
 public class RedirectToIndexPageFilter implements Filter {
     List<String> strings = List.of(
             "/bank/", "/country", "/static", "/manifest","/robots.txt",
-            "/logo", "/favicon", "/manage", "/site-logo", "/service", "/auth"
+            "/logo", "/favicon", "/manage", "/site-logo", "/service", "/auth", "/docs"
     );
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
@@ -21,6 +21,8 @@ public class RedirectToIndexPageFilter implements Filter {
 
         HttpServletRequest req = (HttpServletRequest) request;
         String requestURI = req.getRequestURI();
+
+//        System.out.println(requestURI);
 
         if(strings.stream().anyMatch(requestURI::startsWith)){
 //            System.out.println("request uri: "+requestURI);

@@ -47,9 +47,9 @@ class CountryRepoTest {
     @Test
     void findByCallCode() {
         String code = "+234";
-        Optional<Country> byCode = repo.findByCallCode(code);
-        assertThat(byCode).isPresent();
-        System.out.println(byCode.get());
+        List<Country> byCode = repo.findByCallCode(code);
+        assertThat(byCode.size()).isNotZero();
+        System.out.println(byCode);
     }
 
     @Test

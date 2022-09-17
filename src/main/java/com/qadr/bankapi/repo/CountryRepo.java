@@ -20,7 +20,7 @@ public interface CountryRepo extends JpaRepository<Country, Integer> {
 
     Optional<Country> findByCode(String code);
 
-    Optional<Country> findByCallCode(String code);
+    List<Country> findByCallCode(String code);
 
 
     @Query("SELECT c FROM Country c WHERE " +

@@ -12,4 +12,11 @@ public class ViewController {
 //        System.out.println("home page");
         return "/index.html";
     }
+
+    @RequestMapping(value ="/docs")
+    public String getDocPage(){
+//        System.out.println("documentation page");
+        return "/doc.html";
+    }
+
 }
